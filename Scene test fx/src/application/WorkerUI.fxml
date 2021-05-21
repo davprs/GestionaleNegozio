@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="workerVBox" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <MenuBar fx:id="workerMenu" maxHeight="30.0" prefHeight="25.0" prefWidth="603.0">
+         <menus>
+            <Menu fx:id="turnMenu" mnemonicParsing="false" text="Turno">
+               <items>
+                  <CheckMenuItem fx:id="turnOnMenu" mnemonicParsing="false" onAction="#turnStart" text="Inizia" />
+                  <MenuItem mnemonicParsing="false" text="Termina" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" onAction="#handleInitMoneyMenu" text="Fondo Cassa">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Inizializza" />
+               </items>
+            </Menu>
+            <Menu fx:id="sellMenu" mnemonicParsing="false" text="Vendita">
+               <items>
+                  <MenuItem fx:id="doSellMenu" mnemonicParsing="false" onAction="#handleDoSellMenu" text="Effettua" />
+                  <MenuItem fx:id="findSellMenu" mnemonicParsing="false" onAction="#handleFindSellMenu" text="Trova" />
+               </items></Menu>
+            <Menu fx:id="clientMenu" mnemonicParsing="false" text="Clienti">
+               <items>
+                  <MenuItem fx:id="findCustomerMenu" mnemonicParsing="false" onAction="#handleFindCustomerMenu" text="Cerca" />
+                  <MenuItem fx:id="newCustomerMenu" mnemonicParsing="false" onAction="#handleNewCustomerMenu" text="Inizializza" />
+               </items></Menu>
+            <Menu mnemonicParsing="false" text="Cerca">
+               <items>
+                  <MenuItem fx:id="searchMenu" mnemonicParsing="false" onAction="#handleSearchMenu" text="Cerca prodotto" />
+               </items></Menu>
+         </menus>
+      </MenuBar>
+      <Pane fx:id="workerPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="428.0" prefWidth="600.0" VBox.vgrow="ALWAYS" />
+   </children>
+</VBox>
