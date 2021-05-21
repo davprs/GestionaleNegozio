@@ -1,5 +1,7 @@
 package controller;
 
+import java.sql.Connection;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -10,7 +12,12 @@ import javafx.scene.layout.Priority;
 
 public class ControllerDoSell extends ControllerLogin{
 
-    public void initialize() {
+    public ControllerDoSell(Connection conn) {
+		super(conn);
+		// TODO Auto-generated constructor stub
+	}
+
+	public void initialize() {
     	
     	String[] keys =
         {

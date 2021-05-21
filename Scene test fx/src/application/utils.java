@@ -2,6 +2,7 @@ package application;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 
 import controller.ControllerLogin;
 import controller.ControllerSearchItems;
@@ -45,13 +46,13 @@ public class utils {
 		stage.show();
 	}
 	
-	public static void createClientUI() {
-		changeUI("UsersUI.fxml", new controller.ControllerSearchItems());
+	public static void createClientUI(Connection conn) {
+		changeUI("UsersUI.fxml", new controller.ControllerSearchItems(conn));
 		
 	}
 	
-	public static void createWorkerUI() {
-		changeUI("WorkerUI.fxml", new controller.ControllerLogin());
+	public static void createWorkerUI(Connection conn) {
+		changeUI("WorkerUI.fxml", new controller.ControllerLogin(conn));
 	}
 	
 	public static void swapPane(Pane innerPane, ControllerLogin controller, String UIPath) {

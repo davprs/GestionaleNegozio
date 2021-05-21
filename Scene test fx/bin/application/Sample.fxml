@@ -14,8 +14,8 @@
             <Font size="26.0" />
          </font>
       </Button>
-      <PasswordField layoutX="399.0" layoutY="332.0" prefHeight="25.0" prefWidth="306.0" />
-      <TextField layoutX="399.0" layoutY="261.0" prefHeight="25.0" prefWidth="306.0" />
+      <PasswordField fx:id="txtWorkerPSSW" layoutX="399.0" layoutY="332.0" prefHeight="25.0" prefWidth="306.0" />
+      <TextField fx:id="txtWorkerID" layoutX="399.0" layoutY="261.0" prefHeight="25.0" prefWidth="306.0" />
       <Text layoutX="323.0" layoutY="265.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Codice dipendente" wrappingWidth="73.107421875" />
       <Text layoutX="323.0" layoutY="349.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" />
       <Button fx:id="clientBtn" layoutX="791.0" layoutY="391.0" mnemonicParsing="false" onAction="#handleClientBtnAction" text="Cliente" />

@@ -18,15 +18,24 @@ public class MainApp extends Application {
 	
 	public static FXMLLoader fxmlloader;
 	public static Stage stage;
+	private static Connection conn = null;
 	
 	
 	@Override
 	public void start(Stage primaryStage) {
+		
+		try {
+			conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/db_prog?user=root&password=password");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		stage = primaryStage;
 		try {
 
 			fxmlloader = new FXMLLoader();
-			fxmlloader.setController(new controller.ControllerLogin());
+			fxmlloader.setController(new controller.ControllerLogin(conn));
 			fxmlloader.setLocation((URL) getClass().getResource("Sample.fxml"));
 			
 			Parent root = fxmlloader.load();
@@ -36,13 +45,6 @@ public class MainApp extends Application {
 			stage.setScene(scene);
 			stage.show();
 		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		Connection conn = null;
-		try {
-			conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/?user=root&password=password");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println(conn);
@@ -66,5 +68,9 @@ public class MainApp extends Application {
 	
 	public static void setStage(Stage stage) {
 		MainApp.stage = stage;
+	}
+	
+	public static Connection getConnection() {
+		return conn;
 	}
 }

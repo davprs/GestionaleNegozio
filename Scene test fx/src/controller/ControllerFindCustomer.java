@@ -1,5 +1,6 @@
 package controller;
 
+import java.sql.Connection;
 import java.util.LinkedList;
 
 import javafx.geometry.Pos;
@@ -7,6 +8,11 @@ import javafx.scene.control.Button;
 
 public class ControllerFindCustomer extends ControllerLogin{
 	
+	public ControllerFindCustomer(Connection conn) {
+		super(conn);
+		// TODO Auto-generated constructor stub
+	}
+
 	public void initialize() {
 		LinkedList <String> categorie = new LinkedList<String>();
 		categorie.add("Modifica");
