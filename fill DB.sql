@@ -76,4 +76,7 @@ UPDATE saldo_giornaliero set entrate = entrate +
 							where data = "2021-1-11";
 
 
+INSERT INTO turno(codice_dipendente, data) VALUES (2, "2020-01-01 00:00:01"); 
+
+
 

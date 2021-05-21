@@ -12,8 +12,8 @@ import javafx.scene.layout.Priority;
 
 public class ControllerDoSell extends ControllerLogin{
 
-    public ControllerDoSell(Connection conn) {
-		super(conn);
+    public ControllerDoSell(Connection conn, Integer id) {
+		super(conn, id);
 		// TODO Auto-generated constructor stub
 	}
 

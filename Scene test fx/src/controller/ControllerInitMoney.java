@@ -7,8 +7,8 @@ import javafx.fxml.FXML;
 
 public class ControllerInitMoney extends ControllerLogin{
 	
-    public ControllerInitMoney(Connection conn) {
-		super(conn);
+    public ControllerInitMoney(Connection conn, Integer id) {
+		super(conn, id);
 		// TODO Auto-generated constructor stub
 	}
 

@@ -22,4 +22,8 @@ select * from vendita;
 select * from saldo_giornaliero;
 select * from prodotto_in_vendita;
 
-select * from prodotto_in_vendita PV, prodotto P where P.codice_prod = PV.codice_prod
+select * from prodotto_in_vendita PV, prodotto P where P.codice_prod = PV.codice_prod;
+
+select * from turno;
+delete from turno where codice_dipendente=1;
+UPDATE turno SET durata=0.29 WHERE codice_dipendente = 1 AND durata IS NULL LIMIT 1;

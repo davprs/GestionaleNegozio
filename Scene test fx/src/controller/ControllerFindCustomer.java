@@ -8,8 +8,8 @@ import javafx.scene.control.Button;
 
 public class ControllerFindCustomer extends ControllerLogin{
 	
-	public ControllerFindCustomer(Connection conn) {
-		super(conn);
+	public ControllerFindCustomer(Connection conn, Integer id) {
+		super(conn, id);
 		// TODO Auto-generated constructor stub
 	}
 

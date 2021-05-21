@@ -46,13 +46,13 @@ public class utils {
 		stage.show();
 	}
 	
-	public static void createClientUI(Connection conn) {
-		changeUI("UsersUI.fxml", new controller.ControllerSearchItems(conn));
+	public static void createClientUI(Connection conn, Integer id) {
+		changeUI("UsersUI.fxml", new controller.ControllerSearchItems(conn, id));
 		
 	}
 	
-	public static void createWorkerUI(Connection conn) {
-		changeUI("WorkerUI.fxml", new controller.ControllerLogin(conn));
+	public static void createWorkerUI(Connection conn, Integer id) {
+		changeUI("WorkerUI.fxml", new controller.ControllerLogin(conn, id));
 	}
 	
 	public static void swapPane(Pane innerPane, ControllerLogin controller, String UIPath) {

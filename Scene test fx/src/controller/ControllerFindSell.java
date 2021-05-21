@@ -11,8 +11,8 @@ import javafx.scene.layout.Priority;
 
 public class ControllerFindSell extends ControllerLogin{
 
-    public ControllerFindSell(Connection conn) {
-		super(conn);
+    public ControllerFindSell(Connection conn, Integer id) {
+		super(conn, id);
 		// TODO Auto-generated constructor stub
 	}
 

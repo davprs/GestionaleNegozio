@@ -32,10 +32,11 @@ public class MainApp extends Application {
 		}
 		
 		stage = primaryStage;
+		
 		try {
 
 			fxmlloader = new FXMLLoader();
-			fxmlloader.setController(new controller.ControllerLogin(conn));
+			fxmlloader.setController(new controller.ControllerLogin(conn, -1));
 			fxmlloader.setLocation((URL) getClass().getResource("Sample.fxml"));
 			
 			Parent root = fxmlloader.load();

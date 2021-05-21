@@ -9,12 +9,13 @@
 
 <VBox fx:id="workerVBox" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <MenuBar fx:id="workerMenu" maxHeight="30.0" prefHeight="25.0" prefWidth="603.0">
+      <MenuBar fx:id="workerMenu" maxHeight="30.0" prefHeight="25.0" prefWidth="1200.0">
          <menus>
             <Menu fx:id="turnMenu" mnemonicParsing="false" text="Turno">
                <items>
                   <CheckMenuItem fx:id="turnOnMenu" mnemonicParsing="false" onAction="#turnStart" text="Inizia" />
-                  <MenuItem mnemonicParsing="false" text="Termina" />
+                  <MenuItem mnemonicParsing="false" onAction="#endTurn" text="Termina" />
+                  <MenuItem mnemonicParsing="false" onAction="#logoutAndClose" text="Logout" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" onAction="#handleInitMoneyMenu" text="Fondo Cassa">

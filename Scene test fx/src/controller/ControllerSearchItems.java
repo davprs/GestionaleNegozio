@@ -26,8 +26,8 @@ public class ControllerSearchItems extends ControllerLogin{
 	final ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 	private final static String showAllBtnTxt = "Tutto";
 	
-    public ControllerSearchItems(Connection conn) {
-		super(conn);
+    public ControllerSearchItems(Connection conn, Integer id) {
+		super(conn, id);
 		// TODO Auto-generated constructor stub
 	}
 

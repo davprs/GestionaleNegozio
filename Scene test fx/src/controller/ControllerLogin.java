@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.ParseException;
 
 import application.MainApp;
 import javafx.beans.Observable;
@@ -35,6 +37,7 @@ import javafx.stage.Stage;
 public class ControllerLogin {
 	
 	Connection conn;
+	Integer id;
 	
 	@FXML
 	TextField txtWorkerID;
@@ -75,8 +78,9 @@ public class ControllerLogin {
 	@FXML
 	VBox findCustomerVbox;
 	
-	public ControllerLogin(Connection conn) {
+	public ControllerLogin(Connection conn, Integer id) {
 		this.conn = conn;
+		this.id = id;
 	}
 	
 	@FXML
@@ -90,7 +94,7 @@ public class ControllerLogin {
 		loginBtn.setText("attimo");
 		loginBtn.setDisable(true);
 		
-		application.utils.createClientUI(conn);
+		application.utils.createClientUI(conn, -1);
 	}
 	
 	@FXML
@@ -136,7 +140,8 @@ public class ControllerLogin {
 		
 		
 		if(status) {
-			application.utils.createWorkerUI(conn);
+			Integer id = Integer.parseInt(txtWorkerID.getText());
+			application.utils.createWorkerUI(conn, id);
 			
 		} else {
 			txtWorkerID.setText("");
@@ -155,33 +160,33 @@ public class ControllerLogin {
 	
 	@FXML
     private void handleSearchMenu() {
-		application.utils.swapPane(workerPane, new ControllerSearchItems(conn), "/application/UsersUI.fxml");
+		application.utils.swapPane(workerPane, new ControllerSearchItems(conn, id), "/application/UsersUI.fxml");
 
 	}
 	
 	@FXML
     private void handleNewCustomerMenu() {
-		application.utils.swapPane(workerPane, new ControllerLogin(conn), "/application/NewCustomerUI.fxml");
+		application.utils.swapPane(workerPane, new ControllerLogin(conn,id), "/application/NewCustomerUI.fxml");
 	}
 	
 	@FXML
     private void handleFindCustomerMenu() {
-		application.utils.swapPane(workerPane, new ControllerFindCustomer(conn), "/application/FindCustomerUI.fxml");
+		application.utils.swapPane(workerPane, new ControllerFindCustomer(conn, id), "/application/FindCustomerUI.fxml");
 	}
 	
 	@FXML
 	private void handleDoSellMenu() {
-		application.utils.swapPane(workerPane, new ControllerDoSell(conn), "/application/DoSellUI.fxml");
+		application.utils.swapPane(workerPane, new ControllerDoSell(conn, id), "/application/DoSellUI.fxml");
 	}
 	
 	@FXML
 	private void handleFindSellMenu() {
-		application.utils.swapPane(workerPane, new ControllerFindSell(conn), "/application/FindSellUI.fxml");
+		application.utils.swapPane(workerPane, new ControllerFindSell(conn, id), "/application/FindSellUI.fxml");
 	}
 	
 	@FXML
 	private void handleInitMoneyMenu() {
-		application.utils.swapPane(workerPane, new ControllerInitMoney(conn), "/application/InitMoneyUI.fxml");
+		application.utils.swapPane(workerPane, new ControllerInitMoney(conn, id), "/application/InitMoneyUI.fxml");
 	}
 	
 	
@@ -191,12 +196,113 @@ public class ControllerLogin {
 	@FXML
     private void turnStart() {
 		turnOnMenu.setDisable(true);
+		java.util.Date dt = new java.util.Date();
+
+		java.text.SimpleDateFormat sdf = 
+		     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		String currentTime = sdf.format(dt);
+		System.out.println(currentTime);
+		
+		String query = "INSERT INTO turno(codice_dipendente, data) VALUES (" + id + ",\"" + currentTime + "\");";
+		
+		Statement stmt = null;
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(query);
+			
+			stmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-	
-	
-	
-	
-	
+	@FXML
+	private void endTurn() {
+		turnOnMenu.setDisable(false);
+		turnOnMenu.setSelected(false);
+		java.util.Date dt = new java.util.Date();
 
+		java.text.SimpleDateFormat sdf = 
+		     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		String currentTime = sdf.format(dt);
+		String startTime = null;
+		System.out.println(currentTime);
+		
+		String query = "SELECT data FROM turno WHERE codice_dipendente = " + id + " AND durata IS NULL LIMIT 1;";
+		
+		Statement stmt = null;
+		try {
+			stmt = conn.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(stmt != null) {
+			try {
+				ResultSet rs = stmt.executeQuery(query);
+				
+				while ( rs.next() ) { 
+					int numCol =rs.getMetaData().getColumnCount(); 
+					for ( int i = 1 ; i <= numCol ; i++ ) 
+					{
+						java.util.Date date;
+						Timestamp timestamp = rs.getTimestamp(i);
+						date = new java.util.Date(timestamp.getTime());
+						startTime = sdf.format(date);
+					} 
+				}
+				
+				rs.close(); 
+				stmt.close();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		Long diff = null;
+		Long diffMinutes = null;
+		Long diffHours = null;
+		
+		try {
+			diff = sdf.parse(currentTime).getTime() - sdf.parse(startTime).getTime();
+			diffMinutes = diff / (60 * 1000) % 60;
+			diffHours = diff / (60 * 60 * 1000);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		query = "UPDATE turno SET durata=" + diffHours + "." + diffMinutes + " WHERE codice_dipendente = " + id + " AND durata IS NULL LIMIT 1;";
+		System.out.println(query);
+		stmt = null;
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(query);
+			
+			stmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
+	
+	@FXML
+	private void logoutAndClose() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.exit(0);
+	}
 }
