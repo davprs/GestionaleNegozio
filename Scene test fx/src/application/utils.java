@@ -55,6 +55,10 @@ public class utils {
 		changeUI("WorkerUI.fxml", new controller.ControllerLogin(conn, id));
 	}
 	
+	public static void createResponsableUI(Connection conn, Integer id) {
+		changeUI("ResponsableUI.fxml", new controller.ControllerLogin(conn, id));
+	}
+	
 	public static void swapPane(Pane innerPane, ControllerLogin controller, String UIPath) {
 		Object newPane = null;
 		SplitPane newLoadedPane = null;

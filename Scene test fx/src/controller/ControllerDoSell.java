@@ -1,16 +1,40 @@
 package controller;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Time;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.util.Callback;
+import javafx.util.Pair;
 
 public class ControllerDoSell extends ControllerLogin{
+	
+	final private LinkedList<Pair<String, Pair<Pair<String, String>, String>>> productsInSell = new LinkedList<>();
+	final ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 
     public ControllerDoSell(Connection conn, Integer id) {
 		super(conn, id);
@@ -73,7 +97,7 @@ public class ControllerDoSell extends ControllerLogin{
 			@Override
 			public void handle(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				textSell.setText("impl");
+				addProductInSell();
 			}
 		});
         
@@ -128,4 +152,109 @@ public class ControllerDoSell extends ControllerLogin{
         sellNumPane.getChildren().addAll(numPad);
     }
 
+	private void addProductInSell() {
+		String txtField = textSell.getText();
+		String code = txtField;
+		String qty = "1";
+		
+		
+		if (txtField.contains("#")) {
+			code = txtField.split("#")[0];
+			qty = txtField.split("#")[1];
+		} else {
+			textSell.setText("");
+		}
+		
+		Pair productInfo = checkProduct(code, qty);
+		
+		if(productInfo != null) {
+			productsInSell.add(new Pair<String, Pair<Pair<String, String>, String>> (productInfo.getKey().toString(), 
+					new Pair<Pair<String, String>, String>(new Pair<String, String>(code, qty), ((Double)(Double.parseDouble(qty) * Double.parseDouble((String) productInfo.getValue()))).toString())));	
+			updateOnScreenList();
+		}
+
+	}
+	
+	private Pair<String, String> checkProduct(String code, String qty) {
+		Statement stmt = null;
+		String cost = null;
+		String name = null;
+		try {
+			stmt  = conn.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(stmt != null) {
+			try {
+				String query = "select nome_prodotto, prezzo_acquisto from prodotto where codice_prod = " + code + " LIMIT 1;";
+				System.out.println(query);
+				ResultSet rs = stmt.executeQuery(query);
+				
+				
+				while ( rs.next() ) { 
+					
+					ObservableList<String> row = FXCollections.observableArrayList();
+					name = rs.getObject(1).toString();
+					cost = ((BigDecimal)rs.getObject(2)).toString();
+
+					
+					
+					
+				}
+				
+				rs.close(); 
+				stmt.close();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if (name != null && cost != null) {
+			return new Pair<String, String>(name, cost);			
+		} else {
+			return null;
+		}
+		
+	}
+	
+	private void updateOnScreenList() {
+		LinkedList<String> colNames = new LinkedList<>();
+		colNames.addAll(Arrays.asList("Nome", "Codice", "Quantità", "Costo"));
+		
+		productsInSellTableView.getItems().clear();
+		productsInSellTableView.getColumns().clear();
+		
+		productsInSellTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		for(String name : colNames) {
+			int j = colNames.indexOf(name);
+			TableColumn col = new TableColumn(name);
+			col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList,String>,ObservableValue<String>>(){                    
+	            public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {                                                                                              
+	                return new SimpleStringProperty(param.getValue().get(j).toString());                        
+	            }                    
+	        });
+			productsInSellTableView.getColumns().add(col);
+		}
+		
+		
+		for(Pair p : productsInSell) {
+			ObservableList<String> row = FXCollections.observableArrayList();
+			row.add((String) p.getKey());
+			row.add(((Pair<String, String>)((Pair<Pair<String, String>, String>) (p.getValue())).getKey()).getKey());
+			row.add(((Pair<String, String>)((Pair<Pair<String, String>, String>) (p.getValue())).getKey()).getValue());
+			row.add(((String)((Pair<Pair<String, String>, String>) (p.getValue())).getValue()));
+
+			data.add(row);
+			productsInSellTableView.setItems(data);
+		}
+		
+		
+		
+	}
+	
+	
 }

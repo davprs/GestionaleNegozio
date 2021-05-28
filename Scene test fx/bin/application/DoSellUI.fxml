@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.FlowPane?>
 
 <SplitPane fx:id="doSellPane" dividerPositions="0.677257525083612" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <items>
-      <ListView prefHeight="200.0" prefWidth="200.0" />
+      <TableView fx:id="productsInSellTableView" prefHeight="200.0" prefWidth="200.0" />
       <FlowPane fx:id="sellNumPane" prefHeight="200.0" prefWidth="200.0">
          <children>
             <TextField fx:id="textSell" alignment="CENTER" prefHeight="26.0" prefWidth="190.0" />

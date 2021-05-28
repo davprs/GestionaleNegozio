@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
@@ -46,6 +47,8 @@ public class ControllerLogin {
 	@FXML
 	Button loginBtn;
 	@FXML
+	TextField findItemsTxtField;
+	@FXML
 	Button clientBtn;
 	@FXML
 	Button searchItemNameBtn;
@@ -68,6 +71,8 @@ public class ControllerLogin {
 	@FXML
 	TextField textSell;
 	@FXML
+	TableView<ObservableList<String>> productsInSellTableView;
+	@FXML
 	FlowPane findSellNumPane;
 	@FXML
 	TextField findTextSell;
@@ -77,6 +82,23 @@ public class ControllerLogin {
 	Label initializedMoneyInfo;
 	@FXML
 	VBox findCustomerVbox;
+	
+	@FXML
+	TableView<ObservableList<String>> workersTableView;
+	@FXML
+	TableView<ObservableList<String>> balanceTableView;
+	@FXML
+	ChoiceBox<String> balanceTypeChoiseBox;
+	@FXML
+	ChoiceBox<String> balanceIntervalChoiseBox;
+	@FXML
+	Button updateBalanceBtn;
+	@FXML
+	Button updateTurnsBtn;
+	
+	
+	
+	
 	
 	public ControllerLogin(Connection conn, Integer id) {
 		this.conn = conn;
@@ -101,7 +123,7 @@ public class ControllerLogin {
     private void handleLoginBtnAction() {
         //label.setText("Hello World!");
 		Boolean status = false;
-		
+		Boolean is_resp = false;
 		Statement stmt = null;
 		try {
 			stmt = conn.createStatement();
@@ -112,12 +134,14 @@ public class ControllerLogin {
 		
 		if(stmt != null) {
 			try {
-				String query = "SELECT * FROM dipendente WHERE codice_dipendente = " + txtWorkerID.getText() + ";";
+				String query = "SELECT è_responsabile FROM dipendente WHERE codice_dipendente = " + txtWorkerID.getText() + ";";
 				System.out.println(query);
 				ResultSet rs = stmt.executeQuery(query);
 				
 				if(rs.next()) {
 					status = true;
+					is_resp = rs.getBoolean(1);
+					System.out.println(is_resp);
 				}
 				/*while ( rs.next() ) { 
 					int numCol =rs.getMetaData().getColumnCount(); 
@@ -141,22 +165,18 @@ public class ControllerLogin {
 		
 		if(status) {
 			Integer id = Integer.parseInt(txtWorkerID.getText());
-			application.utils.createWorkerUI(conn, id);
+			if (is_resp) {
+				application.utils.createResponsableUI(conn, id);
+			} else {
+				application.utils.createWorkerUI(conn, id);				
+			}
 			
 		} else {
 			txtWorkerID.setText("");
 			txtWorkerPSSW.setText("");
 
 		}
-	}
-
-	
-	
-	@FXML
-    private void handleNameSearchAction() {
-        System.out.println("Hello World!");
-	}
-	
+	}	
 	
 	@FXML
     private void handleSearchMenu() {
@@ -189,7 +209,10 @@ public class ControllerLogin {
 		application.utils.swapPane(workerPane, new ControllerInitMoney(conn, id), "/application/InitMoneyUI.fxml");
 	}
 	
-	
+	@FXML
+	private void handleManageWorkers() {
+		application.utils.swapPane(workerPane, new ControllerManageWorkers(conn, id), "/application/MonitorWorkersActivityUI.fxml");
+	}
 	
 	
 	
@@ -268,9 +291,10 @@ public class ControllerLogin {
 		Long diff = null;
 		Long diffMinutes = null;
 		Long diffHours = null;
-		
+		Long diffSeconds = null;
 		try {
 			diff = sdf.parse(currentTime).getTime() - sdf.parse(startTime).getTime();
+			diffSeconds = diff / (1000) % 60;
 			diffMinutes = diff / (60 * 1000) % 60;
 			diffHours = diff / (60 * 60 * 1000);
 		} catch (ParseException e) {
@@ -278,7 +302,7 @@ public class ControllerLogin {
 			e.printStackTrace();
 		}
 		
-		query = "UPDATE turno SET durata=" + diffHours + "." + diffMinutes + " WHERE codice_dipendente = " + id + " AND durata IS NULL LIMIT 1;";
+		query = "UPDATE turno SET durata=\'" + diffHours + ":" + diffMinutes + ":" + diffSeconds + "\' WHERE codice_dipendente = " + id + " AND durata IS NULL LIMIT 1;";
 		System.out.println(query);
 		stmt = null;
 		try {

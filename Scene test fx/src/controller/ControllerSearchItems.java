@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -25,6 +26,7 @@ public class ControllerSearchItems extends ControllerLogin{
 	
 	final ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 	private final static String showAllBtnTxt = "Tutto";
+	private static String selCat = showAllBtnTxt;
 	
     public ControllerSearchItems(Connection conn, Integer id) {
 		super(conn, id);
@@ -88,8 +90,13 @@ public class ControllerSearchItems extends ControllerLogin{
     		}
     		
     		button.setStyle("-fx-background-color: #aaaaff");
+    		findItemsTxtField.setText("");
+    		selCat = categoryName;
     		showProducts(categoryName);
     	   });
+    	if(categoryName.equals(showAllBtnTxt)) {
+    		button.setStyle("-fx-background-color: #aaaaff");
+    	}
     	
     	
     	categoryVbox.getChildren().add(button);
@@ -213,5 +220,67 @@ public class ControllerSearchItems extends ControllerLogin{
 		
     }
     
+    
+    private void showProductsFilter(String uQuery) {
+    	Statement stmt = null;
+		try {
+			stmt  = conn.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(stmt != null) {
+			try {
+				String query = null;
+				if(selCat.equals(showAllBtnTxt)) {
+					query = "SELECT nome_prodotto AS NOME, categoria AS CATEGORIA, prezzo_vendita AS PREZZO, quantità_disponibile as QTA  FROM prodotto WHERE nome_prodotto LIKE \'%"+ uQuery + "%\';";
+				} else {
+					query = "SELECT nome_prodotto AS NOME, categoria AS CATEGORIA, prezzo_vendita AS PREZZO, quantità_disponibile as QTA  "+
+							"FROM prodotto WHERE nome_prodotto LIKE \'%"+ uQuery + "%\' AND categoria = \'" + selCat + "\';";					
+				}
+								
+				System.out.println(query);
+				ResultSet rs = stmt.executeQuery(query);
+				
+				productsTableView.getItems().clear(); 
+				productsTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+				
+				while ( rs.next() ) { 
+					
+					ObservableList<String> row = FXCollections.observableArrayList();
+					row.add((String)rs.getObject(1));
+					row.add((String)rs.getObject(2));
+					row.add(((BigDecimal)rs.getObject(3)).toString());
+					row.add(((Integer)rs.getObject(4)).toString());
+
+					System.out.println("AAAAAAAAAAAAAAAAAAAAAAA" + row);
+					
+					data.add(row);
+					productsTableView.setItems(data);
+					
+					
+					
+				}
+				
+				rs.close(); 
+				stmt.close();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		
+		
+    }
+    
+    
+    @FXML
+    private void handleNameSearchAction() {
+    	System.out.println(findItemsTxtField.getText());
+    	showProductsFilter(findItemsTxtField.getText());
+    }
     
 }

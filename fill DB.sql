@@ -59,7 +59,7 @@ INSERT INTO prodotto (codice_prod, nome_prodotto, categoria, prezzo_vendita, pre
 ##### Inserire Vendita
  #///datetime
 #INSERT INTO saldo_giornaliero(data, entrate, uscite) VALUES ("2021-1-11", 0, 0);
-INSERT INTO vendita (codice_scontrino, data, giorno_saldo, codice_dipendente, numero_cliente_tesserato) VALUES (NULL, "2022-1-11", "2022-1-11", 1, NULL);
+INSERT INTO vendita (codice_scontrino, data, giorno_saldo, codice_dipendente, numero_cliente_tesserato) VALUES (NULL, "2021-5-28", "2021-5-28", 1, NULL);
 
 
 #////////////	SENZA DATA, va tolto (forse)
@@ -73,10 +73,10 @@ UPDATE saldo_giornaliero set entrate = entrate +
                             from prodotto_in_vendita
                             where codice_scontrino = LAST_INSERT_ID()) as proddd
                             where codice_prod = C)
-							where data = "2021-1-11";
+							where data = "2021-5-28";
 
 
-INSERT INTO turno(codice_dipendente, data) VALUES (2, "2020-01-01 00:00:01"); 
+INSERT INTO turno(codice_dipendente, data, durata) VALUES (2, "2020-02-01 13:10:02", "8:10:50"); 
 
 
 
