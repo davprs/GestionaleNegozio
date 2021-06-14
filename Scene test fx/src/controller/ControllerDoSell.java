@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +34,7 @@ import javafx.util.Pair;
 
 public class ControllerDoSell extends ControllerLogin{
 	
-	final private LinkedList<Pair<String, Pair<Pair<String, String>, String>>> productsInSell = new LinkedList<>();
+	final private LinkedList<LinkedList<String>> productsInSell = new LinkedList<>();
 	final ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 
     public ControllerDoSell(Connection conn, Integer id) {
@@ -98,6 +99,8 @@ public class ControllerDoSell extends ControllerLogin{
 			public void handle(ActionEvent arg0) {
 				// TODO Auto-generated method stub
 				addProductInSell();
+				textSell.setText("");
+
 			}
 		});
         
@@ -118,6 +121,8 @@ public class ControllerDoSell extends ControllerLogin{
 			@Override
 			public void handle(ActionEvent arg0) {
 				// TODO Auto-generated method stub
+				productsInSell.removeAll(productsInSell);
+				updateOnScreenList();
 				textSell.setText("");
 			}
 		});
@@ -138,7 +143,9 @@ public class ControllerDoSell extends ControllerLogin{
 			@Override
 			public void handle(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				textSell.setText("impl");
+				saveSell();
+				productsInSell.removeAll(productsInSell);
+				textSell.setText("");
 			}
 		});
         
@@ -168,8 +175,10 @@ public class ControllerDoSell extends ControllerLogin{
 		Pair productInfo = checkProduct(code, qty);
 		
 		if(productInfo != null) {
-			productsInSell.add(new Pair<String, Pair<Pair<String, String>, String>> (productInfo.getKey().toString(), 
-					new Pair<Pair<String, String>, String>(new Pair<String, String>(code, qty), ((Double)(Double.parseDouble(qty) * Double.parseDouble((String) productInfo.getValue()))).toString())));	
+			LinkedList<String> inner = new LinkedList<String>();
+			inner.addAll(Arrays.asList(productInfo.getKey().toString(), code, qty, ((Double)(Double.parseDouble(qty) * Double.parseDouble((String) productInfo.getValue()))).toString()));
+			
+			productsInSell.add( inner);	
 			updateOnScreenList();
 		}
 
@@ -184,11 +193,12 @@ public class ControllerDoSell extends ControllerLogin{
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			application.utils.showPopupPane(e.toString());
 		}
 		
 		if(stmt != null) {
 			try {
-				String query = "select nome_prodotto, prezzo_acquisto from prodotto where codice_prod = " + code + " LIMIT 1;";
+				String query = "select nome_prodotto, prezzo_vendita from prodotto where codice_prod = " + code + " LIMIT 1;";
 				System.out.println(query);
 				ResultSet rs = stmt.executeQuery(query);
 				
@@ -210,6 +220,7 @@ public class ControllerDoSell extends ControllerLogin{
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				application.utils.showPopupPane(e.toString());
 			}
 		}
 		
@@ -241,12 +252,12 @@ public class ControllerDoSell extends ControllerLogin{
 		}
 		
 		
-		for(Pair p : productsInSell) {
+		for(LinkedList<String> inner : productsInSell) {
 			ObservableList<String> row = FXCollections.observableArrayList();
-			row.add((String) p.getKey());
-			row.add(((Pair<String, String>)((Pair<Pair<String, String>, String>) (p.getValue())).getKey()).getKey());
-			row.add(((Pair<String, String>)((Pair<Pair<String, String>, String>) (p.getValue())).getKey()).getValue());
-			row.add(((String)((Pair<Pair<String, String>, String>) (p.getValue())).getValue()));
+			row.add(inner.get(0));
+			row.add(inner.get(1));
+			row.add(inner.get(2));
+			row.add(inner.get(3));
 
 			data.add(row);
 			productsInSellTableView.setItems(data);
@@ -256,5 +267,68 @@ public class ControllerDoSell extends ControllerLogin{
 		
 	}
 	
-	
+	@FXML
+	private void saveSell() {
+		Statement stmt = null;
+		LocalDate ld = LocalDate.now();
+		
+		
+		try {
+			stmt  = conn.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			application.utils.showPopupPane(e.toString());
+		}
+		
+		if(stmt != null) {
+			try {
+				String query = "INSERT INTO vendita (codice_scontrino, giorno_saldo, codice_dipendente, numero_cliente_tesserato) "
+						+ "VALUES (NULL, \"" +  ld.toString()  + "\", " + id.toString() + ", NULL);";
+						
+				System.out.println(query);
+				stmt = conn.createStatement();
+				int res = stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+				ResultSet lastId = stmt.getGeneratedKeys();
+				
+				
+				stmt = conn.createStatement();
+				
+				String piece = "INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità) VALUES ";
+				lastId.next();
+				if(res != 0) {
+					int i = 0;
+					for (LinkedList<String> prod : productsInSell) {
+						if(i != 0) {
+							piece += ",";
+						}
+						piece += "(" + lastId.getString(1)+ ", " + prod.get(1) + ", " + prod.get(2) + ")";
+
+					}
+				
+				
+					piece += ";";
+					System.out.println(piece);
+					stmt.executeUpdate(piece);
+					
+					String update = "UPDATE saldo_giornaliero set entrate = entrate + "
+							+ "							(SELECT sum(prezzo_vendita * Q) from prodotto,"
+							+ "							(SELECT codice_prod C, quantità Q "
+							+ "                            from prodotto_in_vendita\r\n"
+							+ "                            where codice_scontrino = " + lastId.getString(1) + ") as proddd"
+							+ "                            where codice_prod = C)"
+							+ "							where data = \"" + ld.toString() + "\";";
+					
+					System.out.println(update);
+					stmt.executeUpdate(update);
+					application.utils.showPopupPane("Vendita effettuata con successo!");
+				}
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+				application.utils.showPopupPane(e.toString());
+			}
+		}
+	}
 }

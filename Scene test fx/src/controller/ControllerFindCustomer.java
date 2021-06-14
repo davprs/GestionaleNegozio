@@ -15,8 +15,9 @@ public class ControllerFindCustomer extends ControllerLogin{
 
 	public void initialize() {
 		LinkedList <String> categorie = new LinkedList<String>();
-		categorie.add("Modifica");
-		categorie.add("Rimuovi");
+		categorie.add("Registra");
+		categorie.add("Aggiorna");
+		categorie.add("Elimina");
 		
 		for(String cat : categorie) {
 			addButton(cat);

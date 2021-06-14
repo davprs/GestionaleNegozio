@@ -2,6 +2,7 @@ package controller;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,9 +20,11 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.util.Callback;
 
 public class ControllerManageWorkers extends ControllerLogin{
@@ -31,7 +34,9 @@ public class ControllerManageWorkers extends ControllerLogin{
 	final private static String COSTS = "Spese";
 	final private static String WEEK = "Settimana";
 	final private static String DAY= "Giorno";
-	final private static String MONTH = "Settimana";
+	final private static String MONTH = "Mese";
+	final private static String YEAR = "Anno";
+
 	final private java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 	final ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 	final ObservableList<ObservableList<String>> dataBal = FXCollections.observableArrayList();
@@ -61,7 +66,7 @@ public class ControllerManageWorkers extends ControllerLogin{
 		
 		
 		balanceTypeChoiseBox.getItems().addAll(BALANCE, INCOME, COSTS);
-		balanceIntervalChoiseBox.getItems().addAll(WEEK, DAY, MONTH);
+		balanceIntervalChoiseBox.getItems().addAll(DAY, WEEK, MONTH, YEAR);
 		
 		
 		
@@ -75,11 +80,12 @@ public class ControllerManageWorkers extends ControllerLogin{
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			application.utils.showPopupPane(e.toString());
 		}
 		
 		if(stmt != null) {
 			try {
-				String query = "select nome, cognome, ore_lavoro_mensili, T.tot_ore_mensili, Lavoro.sta_lavorando"
+				String query = "select nome, cognome, ore_lavoro_mensili, T.tot_ore_mensili, Lavoro.sta_lavorando, D.email, D.stipendio_base, D.data_assunzione, D.è_responsabile, P.città"
 						+ "		from Persona P, dipendente D , ("
 						+ "			select codice_dipendente, SEC_TO_TIME(SUM(TIME_TO_SEC(durata))) as tot_ore_mensili "
 						+ "            from turno "
@@ -90,7 +96,7 @@ public class ControllerManageWorkers extends ControllerLogin{
 						+ "                from turno "
 						+ "                group by codice_dipendente "
 						+ "            ) AS Lavoro "
-						+ "where P.email = D.email AND D.codice_dipendente = T.codice_dipendente AND D.codice_dipendente = Lavoro.CD "
+						+ "where P.email = D.email AND D.codice_dipendente = T.codice_dipendente AND D.codice_dipendente = Lavoro.CD  AND D.licenziato = false "
 						+ "group by D.codice_dipendente;";
 				System.out.println(query);
 				ResultSet rs = stmt.executeQuery(query);
@@ -98,7 +104,7 @@ public class ControllerManageWorkers extends ControllerLogin{
 				
 				workersTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 				int numCol =rs.getMetaData().getColumnCount(); 
-				for ( int i = 1 ; i <= numCol ; i++ ) 
+				for ( int i = 1 ; i <= numCol - 5 ; i++ ) 
 				{
 					System.out.println(rs.getMetaData().getColumnName(i));
 					final int j = i -1;                
@@ -120,7 +126,14 @@ public class ControllerManageWorkers extends ControllerLogin{
 					row.add(((Object)rs.getObject(3)).toString());
 					row.add(((Time)rs.getObject(4)).toString());
 					row.add(((Integer)rs.getObject(5)).toString());
+					
+					row.add(rs.getObject(6).toString());
+					row.add(((BigDecimal)rs.getObject(7)).toString());
+					row.add(((Date)rs.getObject(8)).toString());
+					row.add(rs.getObject(9).toString());
+					row.add(rs.getObject(10).toString());
 
+					
 					System.out.println("AAAAAAAAAAAAAAAAAAAAAAA" + row);
 					
 					data.add(row);
@@ -136,6 +149,7 @@ public class ControllerManageWorkers extends ControllerLogin{
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				application.utils.showPopupPane(e.toString());
 			}
 		}
 
@@ -172,6 +186,7 @@ public class ControllerManageWorkers extends ControllerLogin{
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			application.utils.showPopupPane(e.toString());
 		}
 		
 		if(stmt != null) {
@@ -210,18 +225,33 @@ public class ControllerManageWorkers extends ControllerLogin{
 				}else if (balanceIntervalChoiseBox.getSelectionModel().getSelectedItem().equals(MONTH)) {
 					txtStop = "Mensili";
 					start = dtN.minusMonths(1).toString();
+				}else if (balanceIntervalChoiseBox.getSelectionModel().getSelectedItem().equals(YEAR)) {
+					txtStop = "Annuale";
+					start = dtN.minusYears(1).toString();
 				} else {
 					return;
 				}
 				
 				txtBalCol = txtStart + txtStop;
 				
-				query = "select ROUND(SUM(entrate), 2) "
-						+ "from saldo_giornaliero "
-						+ "where data between \"" + start + "\" and \"" + end + "\";";
-				System.out.println(query);
-				ResultSet rs = stmt.executeQuery(query);
+				ResultSet rs = null;
 				
+				if (balanceTypeChoiseBox.getSelectionModel().getSelectedItem().equals(INCOME)) {
+					query = "select ROUND(SUM(entrate), 2) "
+							+ "from saldo_giornaliero "
+							+ "where data between \"" + start + "\" and \"" + end + "\";";
+					rs = stmt.executeQuery(query);
+				} else if (balanceTypeChoiseBox.getSelectionModel().getSelectedItem().equals(BALANCE)) {
+					query = "select ROUND(SUM(entrate) - SUM(uscite), 2) "
+							+ "from saldo_giornaliero "
+							+ "where data between \"" + start + "\" and \"" + end + "\";";
+					rs = stmt.executeQuery(query);
+				} else if (balanceTypeChoiseBox.getSelectionModel().getSelectedItem().equals(COSTS)) {
+					query = "select ROUND(SUM(uscite), 2) from saldo_giornaliero "
+							+ "where data between \"" + start + "\" and \"" + end + "\";";
+					rs = stmt.executeQuery(query);
+				}
+				System.out.println(query);
 				
 				balanceTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 				int numCol =rs.getMetaData().getColumnCount(); 
@@ -239,7 +269,7 @@ public class ControllerManageWorkers extends ControllerLogin{
 				while ( rs.next() ) { 
 					
 					ObservableList<String> row = FXCollections.observableArrayList();
-					row.add(((Double)rs.getObject(1)).toString());
+					row.add(((BigDecimal)rs.getObject(1)).toString());
 					
 					dataBal.add(row);
 					balanceTableView.setItems(dataBal);
@@ -254,7 +284,37 @@ public class ControllerManageWorkers extends ControllerLogin{
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				application.utils.showPopupPane(e.toString());
 			}
 		}
+    }
+    
+    @FXML
+    private void handleUpdateWorkersInfo() {
+    	
+    	
+    }
+    
+    @FXML
+    private void handleFireWorker() {
+    	
+    }
+    
+    @FXML
+    private void handleShowWorkersInfo() {
+    	System.out.println(workersTableView.getSelectionModel().getSelectedItem().get(5));
+    	System.out.println(workersTableView.getSelectionModel().getSelectedItem().get(6));
+    	System.out.println(workersTableView.getSelectionModel().getSelectedItem().get(7));
+
+    	nameWorkerMonitor.setText(workersTableView.getSelectionModel().getSelectedItem().get(0));
+    	surnameWorkerMonitor.setText(workersTableView.getSelectionModel().getSelectedItem().get(1));
+    	baseSalaryWorkerMonitor.setText(workersTableView.getSelectionModel().getSelectedItem().get(6));
+    	baseWorkTimeWork.setText(workersTableView.getSelectionModel().getSelectedItem().get(2));
+    	hiringDateWorkersMonitor.setText(workersTableView.getSelectionModel().getSelectedItem().get(7));
+    	emailWorkersMonitor.setText(workersTableView.getSelectionModel().getSelectedItem().get(5));
+    	cityWorkersMonitor.setText(workersTableView.getSelectionModel().getSelectedItem().get(9));
+    	isResponsableWorkersMonitor.setSelected(workersTableView.getSelectionModel().getSelectedItem().get(8).equals("true"));
+    	
+    	
     }
 }

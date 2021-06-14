@@ -1,6 +1,11 @@
 ##### Visualizza tutti dati personali Dipendente
 
-select * from Persona P, dipendente D where P.email = D.email;
+select  nome, cognome, data_assunzione, stipendio_base, ore_lavoro_mensili, T.tot_ore_mensili, è_responsabile 
+from Persona P, dipendente D , (select codice_dipendente, SEC_TO_TIME(SUM(TIME_TO_SEC(durata))) as tot_ore_mensili 
+            from turno  
+            where data between "2021-04-24" and "2021-05-30" 
+            group by codice_dipendente) as T
+where P.email = D.email AND T.codice_dipendente = D.codice_dipendente;
 select * from Persona P;
 
 ##### Visualizza tutti i responsabili
@@ -8,7 +13,10 @@ select * from Persona P;
 
 #### Visualizza prodotti
 
-select * from prodotto;
+select * from fornitore;
+select * from ordine;
+
+select nome_prodotto, prezzo_acquisto from prodotto where codice_prod = 12345;
 
 #	visualizza statistiche su quanto è il guadagno e la percentuale di guadagno
 #select @valore_vendita:=sum(prezzo_vendita*quantità_disponibile) as valore_vendita, 
@@ -19,11 +27,20 @@ select * from prodotto;
 
 select * from categoria;
 select * from vendita;
+select * from prodotto;
 select * from saldo_giornaliero;
 select * from prodotto_in_vendita;
+select * from prodotto_di_fornitore;
+select * from fornitore;
+select * from ordine;
+select * from composizione;
+select * from ricerca;
+select * from stipendio;
 
-select ROUND(SUM(entrate), 2) from saldo_giornaliero where data between "2021-5-28" and "2021-5-29";
-
+select SUM(uscite) from saldo_giornaliero where data between "2021-5-28" and "2021-6-30";
+select * from saldo_giornaliero;
+select ROUND(SUM(entrate) - SUM(uscite), 2) from saldo_giornaliero where data between "2021-5-28" and "2021-6-29";
+select * from costi_di_gestione;
 
 select * from prodotto_in_vendita PV, prodotto P where P.codice_prod = PV.codice_prod;
 
@@ -45,7 +62,6 @@ group by D.codice_dipendente;
 select codice_dipendente as CD, EXISTS(select * from turno where durata is null and CD = codice_dipendente) as sta_lavorando
                 from turno
                 group by codice_dipendente;
-
 
 select codice_dipendente, SEC_TO_TIME(SUM(TIME_TO_SEC(durata)))as tot_ore_mensili from turno where data between "2021-04-24" and "2021-05-25"  group by codice_dipendente;
 delete from turno where codice_dipendente=1;

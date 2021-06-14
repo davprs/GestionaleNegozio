@@ -16,12 +16,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -96,9 +98,67 @@ public class ControllerLogin {
 	@FXML
 	Button updateTurnsBtn;
 	
+	@FXML
+	TextField nameWorkerMonitor;
+	@FXML
+	TextField surnameWorkerMonitor;
+	@FXML
+	TextField baseSalaryWorkerMonitor;
+	@FXML
+	TextField baseWorkTimeWork;
+	@FXML
+	TextField hiringDateWorkersMonitor;
+	@FXML
+	TextField emailWorkersMonitor;
+	@FXML
+	TextField cityWorkersMonitor;
+	@FXML
+	CheckBox isResponsableWorkersMonitor;
+	@FXML
+	Button fireWorker;
+	@FXML
+	Button updateWorkersInfo;
 	
-	
-	
+	@FXML
+	Label lblName;
+	@FXML
+	Label lblHired;
+	@FXML
+	Label lblHStd;
+	@FXML
+	Label lblHEff;
+	@FXML
+	Label lblSalBase;
+	@FXML
+	Label lblIsRes;
+	@FXML
+	ListView workersNamesLV;
+	@FXML
+	Button sub20btn;
+	@FXML
+	Button add20btn;
+	@FXML
+	TextField salaryTF;
+	@FXML
+	ListView<ObservableList<String>> supplierLV;
+	@FXML
+	TableView<ObservableList<String>> productsTV;
+	@FXML
+	Label productNameLbl;
+	@FXML
+	TextField qtyTF;
+	@FXML
+	Button addProdBtn;
+	@FXML
+	Button rmProdBtn;
+	@FXML
+	TableView<ObservableList<String>> cartTV;
+	@FXML
+	TextField costTitleTF;
+	@FXML
+	TextArea costDescriptionTA;
+	@FXML
+	TextField costImportTF;
 	
 	public ControllerLogin(Connection conn, Integer id) {
 		this.conn = conn;
@@ -107,7 +167,23 @@ public class ControllerLogin {
 	
 	@FXML
 	public void initialize() {
+		String query = "SELECT * FROM Turno WHERE codice_dipendente = " + id.toString() + " AND durata IS NULL;";
 		
+		Statement stmt = null;
+		try {
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			if (rs.next()) {
+				turnOnMenu.setSelected(true);
+				turnOnMenu.setDisable(true);
+			}
+			
+			stmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			application.utils.showPopupPane(e.toString());
+		}
 	}
 	
 	@FXML
@@ -130,6 +206,7 @@ public class ControllerLogin {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			application.utils.showPopupPane(e.toString());
 		}
 		
 		if(stmt != null) {
@@ -157,6 +234,7 @@ public class ControllerLogin {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				application.utils.showPopupPane(e.toString());
 			}
 			
 		}
@@ -214,6 +292,10 @@ public class ControllerLogin {
 		application.utils.swapPane(workerPane, new ControllerManageWorkers(conn, id), "/application/MonitorWorkersActivityUI.fxml");
 	}
 	
+	@FXML
+	private void handleAddCost() {
+		application.utils.swapPane(workerPane, new ControllerCosts(conn, id), "/application/ResponsableCostsUI.fxml");
+	}
 	
 	
 	@FXML
@@ -238,6 +320,7 @@ public class ControllerLogin {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			application.utils.showPopupPane(e.toString());
 		}
 	}
 	
@@ -262,6 +345,7 @@ public class ControllerLogin {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			application.utils.showPopupPane(e.toString());
 		}
 		
 		if(stmt != null) {
@@ -285,6 +369,7 @@ public class ControllerLogin {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				application.utils.showPopupPane(e.toString());
 			}
 		}
 		
@@ -313,6 +398,7 @@ public class ControllerLogin {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			application.utils.showPopupPane(e.toString());
 		}
 		
 		
@@ -326,6 +412,7 @@ public class ControllerLogin {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			application.utils.showPopupPane(e.toString());
 		}
 		System.exit(0);
 	}

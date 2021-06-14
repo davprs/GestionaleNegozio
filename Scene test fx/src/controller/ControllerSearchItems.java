@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.LinkedList;
 
 import com.mysql.cj.result.Row;
@@ -93,6 +95,7 @@ public class ControllerSearchItems extends ControllerLogin{
     		findItemsTxtField.setText("");
     		selCat = categoryName;
     		showProducts(categoryName);
+    		saveCategoryStat(categoryName);
     	   });
     	if(categoryName.equals(showAllBtnTxt)) {
     		button.setStyle("-fx-background-color: #aaaaff");
@@ -276,11 +279,63 @@ public class ControllerSearchItems extends ControllerLogin{
 		
     }
     
+    private void saveCategoryStat(String categoryName) {
+    	Statement stmt = null;
+		try {
+			stmt  = conn.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		LocalDate lt = LocalDate.now();
+		if(stmt != null) {
+			try {
+				String query = null;
+				query = "INSERT INTO ricerca(data, categoria) "
+						+ "VALUES(\"" + lt.toString() + "\", \"" + categoryName + "\");";
+								
+				System.out.println(query);
+				stmt.executeUpdate(query);
+				stmt.close();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+    }
+
+    private void saveSearchName(String searchName) {
+    	Statement stmt = null;
+		try {
+			stmt  = conn.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		LocalDate lt = LocalDate.now();
+		if(stmt != null) {
+			try {
+				String query = null;
+				query = "INSERT INTO ricerca(data, nome) "
+						+ "VALUES(\"" + lt.toString() + "\", \"" + searchName + "\");";
+								
+				System.out.println(query);
+				stmt.executeUpdate(query);
+				stmt.close();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+    }
     
     @FXML
     private void handleNameSearchAction() {
-    	System.out.println(findItemsTxtField.getText());
-    	showProductsFilter(findItemsTxtField.getText());
+    	String searchName = findItemsTxtField.getText();
+    	showProductsFilter(searchName);
+    	saveSearchName(searchName);
     }
     
 }

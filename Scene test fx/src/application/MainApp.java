@@ -25,10 +25,11 @@ public class MainApp extends Application {
 	public void start(Stage primaryStage) {
 		
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/db_prog?user=root&password=password");
+			conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/db_prog2?user=root&password=password");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			application.utils.showPopupPane(e.toString());
 		}
 		
 		stage = primaryStage;

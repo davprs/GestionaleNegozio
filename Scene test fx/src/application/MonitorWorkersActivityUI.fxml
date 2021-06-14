@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -13,6 +15,7 @@
          <children>
             <TableView fx:id="workersTableView" layoutY="45.0" prefHeight="655.0" prefWidth="596.0" />
             <Button fx:id="updateTurnsBtn" layoutX="531.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleUpdateWorkingStatus" text="Aggiorna" />
+            <Button layoutX="442.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleShowWorkersInfo" text="Mostra info" />
          </children>
       </AnchorPane>
       <SplitPane dividerPositions="0.14469914040114612" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
@@ -27,16 +30,23 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <TextField layoutX="31.0" layoutY="43.0" />
-                  <TextField layoutX="31.0" layoutY="165.0" />
-                  <TextField layoutX="31.0" layoutY="231.0" />
-                  <TextField layoutX="279.0" layoutY="43.0" />
-                  <TextField layoutX="279.0" layoutY="105.0" />
-                  <TextField layoutX="279.0" layoutY="165.0" />
-                  <TextField layoutX="279.0" layoutY="231.0" />
-                  <TextField layoutX="31.0" layoutY="105.0" />
-                  <ChoiceBox layoutX="31.0" layoutY="313.0" prefWidth="150.0" />
-                  <Button layoutX="397.0" layoutY="421.0" mnemonicParsing="false" text="Aggiorna/Inserisci" />
+                  <TextField fx:id="nameWorkerMonitor" layoutX="31.0" layoutY="43.0" />
+                  <TextField fx:id="hiringDateWorkersMonitor" layoutX="31.0" layoutY="165.0" />
+                  <TextField fx:id="surnameWorkerMonitor" layoutX="279.0" layoutY="43.0" />
+                  <TextField fx:id="emailWorkersMonitor" layoutX="279.0" layoutY="165.0" />
+                  <TextField fx:id="baseSalaryWorkerMonitor" layoutX="31.0" layoutY="105.0" />
+                  <Button fx:id="updateWorkersInfo" layoutX="397.0" layoutY="421.0" mnemonicParsing="false" onAction="#handleUpdateWorkersInfo" text="Aggiorna/Inserisci" />
+                  <TextField fx:id="baseWorkTimeWork" layoutX="279.0" layoutY="105.0" />
+                  <Label layoutX="92.0" layoutY="14.0" text="Nome" />
+                  <Label layoutX="340.0" layoutY="148.0" text="Email" />
+                  <Label layoutX="88.0" layoutY="148.0" text="Data assunzione" />
+                  <Label layoutX="340.0" layoutY="88.0" text="Ore lavoro mensili" />
+                  <Label layoutX="92.0" layoutY="88.0" text="Stipendio Base" />
+                  <Label layoutX="340.0" layoutY="24.0" text="Cognome" />
+                  <CheckBox fx:id="isResponsableWorkersMonitor" layoutX="56.0" layoutY="235.0" mnemonicParsing="false" text="è un responsabile" />
+                  <TextField fx:id="cityWorkersMonitor" layoutX="280.0" layoutY="240.0" />
+                  <Label layoutX="308.0" layoutY="218.0" text="Città di residenza" />
+                  <Button fx:id="fireWorker" layoutX="80.0" layoutY="421.0" mnemonicParsing="false" onAction="#handleFireWorker" text="Licenzia" />
                </children>
             </AnchorPane>
         </items>

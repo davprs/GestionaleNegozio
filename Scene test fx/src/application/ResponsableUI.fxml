@@ -40,6 +40,7 @@
             <Menu mnemonicParsing="false" text="Alti Privilegi">
                <items>
                   <MenuItem fx:id="manageWorkers" mnemonicParsing="false" onAction="#handleManageWorkers" text="Gestisci Personale" />
+                  <MenuItem fx:id="manageWorkers1" mnemonicParsing="false" onAction="#handleAddCost" text="Aggiungi Spesa" />
                </items>
             </Menu>
          </menus>

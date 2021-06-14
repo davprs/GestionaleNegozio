@@ -1,4 +1,5 @@
-#drop trigger dopo_nuovo_prodotto_in_vendita;
+drop trigger nuova_vendita;
+
 DELIMITER $$
 CREATE TRIGGER dopo_nuovo_prodotto_in_vendita
 AFTER INSERT
@@ -14,9 +15,60 @@ CREATE TRIGGER nuova_vendita
 BEFORE INSERT
 ON vendita FOR EACH ROW
 BEGIN
-	IF NEW.data NOT IN (SELECT data FROM saldo_giornaliero) THEN
-		INSERT INTO saldo_giornaliero(data, entrate, uscite) VALUES (new.data, 0, 0);
+	IF NEW.giorno_saldo NOT IN (SELECT data FROM saldo_giornaliero) THEN
+		INSERT INTO saldo_giornaliero(data, entrate, uscite) VALUES (new.giorno_saldo, 0, 0);
         END IF;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER nuovo_ordine
+BEFORE INSERT
+ON ordine FOR EACH ROW
+BEGIN
+	IF NEW.giorno_saldo NOT IN (SELECT data FROM saldo_giornaliero) THEN
+		INSERT INTO saldo_giornaliero(data, entrate, uscite) VALUES (new.giorno_saldo, 0, 0);
+        END IF;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER nuovo_costo_di_gestione
+BEFORE INSERT
+ON costi_di_gestione FOR EACH ROW
+BEGIN
+	IF NEW.giorno_saldo NOT IN (SELECT data FROM saldo_giornaliero) THEN
+		INSERT INTO saldo_giornaliero(data, entrate, uscite) VALUES (new.giorno_saldo, 0, 0);
+        END IF;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER nuovo_stipendio
+BEFORE INSERT
+ON stipendio FOR EACH ROW
+BEGIN
+	IF NEW.giorno_saldo NOT IN (SELECT data FROM saldo_giornaliero) THEN
+		INSERT INTO saldo_giornaliero(data, entrate, uscite) VALUES (new.giorno_saldo, 0, 0);
+        END IF;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER stipendio_update_saldo
+AFTER INSERT
+ON stipendio FOR EACH ROW
+BEGIN
+	UPDATE saldo_giornaliero set uscite = uscite + new.importo where saldo_giornaliero.data = new.giorno_saldo;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER costo_di_gestione_update_saldo
+AFTER INSERT
+ON costi_di_gestione FOR EACH ROW
+BEGIN
+	UPDATE saldo_giornaliero set uscite = uscite + new.importo where saldo_giornaliero.data = new.giorno_saldo;
 END$$
 DELIMITER ;
 
@@ -28,6 +80,15 @@ BEGIN
 	IF NEW.categoria NOT IN (SELECT * FROM categoria) THEN
 		INSERT INTO categoria(nome) VALUES (NEW.categoria);
         END IF;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER ordine_update_quantità_prodotto
+AFTER INSERT
+ON composizione FOR EACH ROW
+BEGIN
+	UPDATE prodotto set quantità_disponibile = quantità_disponibile + new.quantità where codice_prod = new.codice_prod;
 END$$
 DELIMITER ;
 
@@ -56,16 +117,38 @@ INSERT INTO prodotto (codice_prod, nome_prodotto, categoria, prezzo_vendita, pre
                         (15346, "Bic JelPen 0.2", "cancelleria", 2.99, 1.2, 35);
 
 
+
+
+INSERT INTO fornitore (nome) VALUES ("Giammarco Sars SRLS");
+INSERT INTO fornitore (nome) VALUES ("Thomann SRLS");
+
+INSERT INTO prodotto_di_fornitore(codice_prod, codice_fornitore) VALUES 
+						(12345, 1),
+                        (16452, 1),
+                        (25648, 1),
+                        (84685, 2),
+                        (15346, 2);
+
+INSERT INTO ordine(codice_dipendente, giorno_saldo, codice_fornitore) VALUES (3, "2021-06-14", 1);
+INSERT INTO composizione(codice_prod, quantità, codice_dipendente, giorno_saldo, codice_fornitore) VALUES 
+						(12345, 10, 3, "2021-06-14", 1);
+
+
+
+
 ##### Inserire Vendita
  #///datetime
 #INSERT INTO saldo_giornaliero(data, entrate, uscite) VALUES ("2021-1-11", 0, 0);
-INSERT INTO vendita (codice_scontrino, data, giorno_saldo, codice_dipendente, numero_cliente_tesserato) VALUES (NULL, "2021-5-28", "2021-5-28", 1, NULL);
+INSERT INTO vendita (codice_scontrino, giorno_saldo, codice_dipendente, numero_cliente_tesserato) VALUES (NULL, "2021-5-28", 1, NULL);
+
+INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità) VALUES (LAST_INSERT_ID(), 12345, 1);
 
 
 #////////////	SENZA DATA, va tolto (forse)
 INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità) VALUES (LAST_INSERT_ID(), 12345, 2);
 INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità) VALUES (LAST_INSERT_ID(), 25648, 2);
-INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità) VALUES (LAST_INSERT_ID(), 84685, 2);
+INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità) 
+VALUES (LAST_INSERT_ID(), 84685, 2), (LAST_INSERT_ID(), 12345, 2), (LAST_INSERT_ID(), 12345, 2);
 
 UPDATE saldo_giornaliero set entrate = entrate + 
 							(SELECT sum(prezzo_vendita * Q) from prodotto,
@@ -78,5 +161,8 @@ UPDATE saldo_giornaliero set entrate = entrate +
 
 INSERT INTO turno(codice_dipendente, data, durata) VALUES (2, "2020-02-01 13:10:02", "8:10:50"); 
 
+INSERT INTO costi_di_gestione(causale, breve_descrizione, importo, giorno_saldo, codice_dipendente) 
+VALUES ("bolletta 1", "Bolletta leggera", 100, "2021-05-30", 3);
 
-
+INSERT INTO stipendio(codice_beneficiario, importo, giorno_saldo, codice_assegnatore)
+VALUES (1, 1200, "2021-5-10", 3);
