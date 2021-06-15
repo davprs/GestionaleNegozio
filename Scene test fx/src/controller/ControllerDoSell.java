@@ -22,6 +22,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -29,21 +30,24 @@ import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.util.Callback;
 import javafx.util.Pair;
 
 public class ControllerDoSell extends ControllerLogin{
 	
 	final private LinkedList<LinkedList<String>> productsInSell = new LinkedList<>();
-	final ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
-
-    public ControllerDoSell(Connection conn, Integer id) {
+	final private ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
+	private TextField customerCodeSellTF = null;
+    
+	public ControllerDoSell(Connection conn, Integer id) {
 		super(conn, id);
 		// TODO Auto-generated constructor stub
 	}
 
 	public void initialize() {
-    	
+		totalDoSellTF.setOpacity(200);
+		
     	String[] keys =
         {
             "1", "2", "3",
@@ -157,6 +161,13 @@ public class ControllerDoSell extends ControllerLogin{
         GridPane.setHgrow(call, Priority.ALWAYS);
         
         sellNumPane.getChildren().addAll(numPad);
+        
+        customerCodeSellTF = new TextField();
+        Region p = new Region();
+        p.setPrefSize(50, 0.0);
+        sellNumPane.getChildren().add(p);
+        sellNumPane.getChildren().add(new Label("Codice Cliente :"));
+        sellNumPane.getChildren().add(customerCodeSellTF);
     }
 
 	private void addProductInSell() {
@@ -263,6 +274,11 @@ public class ControllerDoSell extends ControllerLogin{
 			productsInSellTableView.setItems(data);
 		}
 		
+		Double total = 0.0;
+		for(ObservableList<String> row : data) {
+			total += Double.parseDouble(row.get(3)) * Double.parseDouble(row.get(2));
+		}
+		totalDoSellTF.setText(Double.toString(total));
 		
 		
 	}
@@ -283,14 +299,29 @@ public class ControllerDoSell extends ControllerLogin{
 		
 		if(stmt != null) {
 			try {
-				String query = "INSERT INTO vendita (codice_scontrino, giorno_saldo, codice_dipendente, numero_cliente_tesserato) "
-						+ "VALUES (NULL, \"" +  ld.toString()  + "\", " + id.toString() + ", NULL);";
+				String customerCode = customerCodeSellTF.getText();
+				String query = null;
+				
+				String comp = null;
+				try {
+					comp = ((Integer)(Integer.parseInt(customerCode))).toString();					
+				} catch (Exception e) {
+					e.printStackTrace();
+					comp = "";
+				}
+				if (comp.equals(customerCode) && ! customerCode.isBlank()) {
+					query = "INSERT INTO vendita (codice_scontrino, giorno_saldo, codice_dipendente, numero_cliente_tesserato) "
+							+ "VALUES (NULL, \"" +  ld.toString()  + "\", " + id.toString() + ", " + customerCode + ");";	
+				} else {
+					query = "INSERT INTO vendita (codice_scontrino, giorno_saldo, codice_dipendente, numero_cliente_tesserato) "
+							+ "VALUES (NULL, \"" +  ld.toString()  + "\", " + id.toString() + ", NULL);";					
+				}
 						
 				System.out.println(query);
 				stmt = conn.createStatement();
 				int res = stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 				ResultSet lastId = stmt.getGeneratedKeys();
-				
+				customerCodeSellTF.setText("");
 				
 				stmt = conn.createStatement();
 				
@@ -303,7 +334,7 @@ public class ControllerDoSell extends ControllerLogin{
 							piece += ",";
 						}
 						piece += "(" + lastId.getString(1)+ ", " + prod.get(1) + ", " + prod.get(2) + ")";
-
+						i++;
 					}
 				
 				

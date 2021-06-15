@@ -40,6 +40,14 @@ select * from video;
 select * from cliente_tesserato;
 select * from persona;
 SELECT nome, cognome, P.email, città from persona P where P.email = "ciao@sonodavide.com";
+SELECT PV.codice_prod, P.nome_prodotto, P.prezzo_vendita as prezzo, PV.quantità FROM prodotto_in_vendita PV, vendita V, prodotto P WHERE PV.codice_scontrino = V.codice_scontrino AND PV.codice_prod = P.codice_prod AND V.codice_scontrino = 9;
+
+SELECT P.nome_prodotto, P.prezzo_vendita as prezzo, PV.quantità 
+	FROM prodotto P, prodotto_in_vendita PV 
+    WHERE PV.codice_scontrino = 1;
+    
+SELECT V.codice_scontrino, PV.codice_prod, P.prezzo_vendita as prezzo, PV.quantità FROM prodotto_in_vendita PV, vendita V, prodotto P where PV.codice_scontrino = V.codice_scontrino AND PV.codice_prod = P.codice_prod AND V.codice_scontrino = 9;
+
 
 SELECT nome, cognome, P.email, città, C.numero_tessera from persona P, cliente_tesserato C 
 	where P.email = C.email AND P.email = "ciao@sonodavide.com";		

@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.text.Font?>
 
-<SplitPane fx:id="doSellPane" dividerPositions="0.677257525083612" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<SplitPane fx:id="doSellPane" dividerPositions="0.677257525083612" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <items>
-      <TableView fx:id="productsInSellTableView" prefHeight="200.0" prefWidth="200.0" />
-      <FlowPane fx:id="sellNumPane" prefHeight="200.0" prefWidth="200.0">
+      <SplitPane dividerPositions="0.9" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+        <items>
+            <TableView fx:id="productsInSellTableView" prefHeight="200.0" prefWidth="200.0" />
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <Label layoutX="29.0" layoutY="-2.0" text="TOTALE :">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="totalDoSellTF" editable="false" layoutX="611.0" layoutY="1.0" />
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+      <FlowPane fx:id="sellNumPane" prefHeight="607.0" prefWidth="200.0">
          <children>
             <TextField fx:id="textSell" alignment="CENTER" prefHeight="26.0" prefWidth="190.0" />
          </children>

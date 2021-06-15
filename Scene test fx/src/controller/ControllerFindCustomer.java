@@ -114,7 +114,7 @@ public class ControllerFindCustomer extends ControllerLogin{
 	
 	private void newCustomer() {
 		String email = customerMailTF.getText();
-		if (email.isEmpty() || ! email.contains("@")) {
+		if (email.isBlank() || ! email.contains("@")) {
 			return;
 		}
 		Statement stmt = null;
@@ -151,7 +151,7 @@ public class ControllerFindCustomer extends ControllerLogin{
 	
 	private void updateCustomer() {
 		String email = customerMailTF.getText();
-		if (email.isEmpty() || ! email.contains("@")) {
+		if (email.isBlank() || ! email.contains("@")) {
 			return;
 		}
 		Statement stmt = null;
@@ -264,7 +264,7 @@ public class ControllerFindCustomer extends ControllerLogin{
 	
 	private void removeCustomer() {
 		String email = customerMailTF.getText();
-		if (email.isEmpty() || ! email.contains("@")) {
+		if (email.isBlank() || ! email.contains("@")) {
 			return;
 		}
 		Statement stmt = null;

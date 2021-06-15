@@ -79,6 +79,12 @@ public class ControllerLogin {
 	@FXML
 	TextField findTextSell;
 	@FXML
+	TableView<ObservableList<String>> findSellTV;
+	@FXML
+	TextField totalFindSellTF;
+	@FXML
+	TextField totalDoSellTF;
+	@FXML
 	VBox initMoneyVBox;
 	@FXML
 	Label initializedMoneyInfo;
