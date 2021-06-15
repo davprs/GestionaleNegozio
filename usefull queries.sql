@@ -36,6 +36,20 @@ select * from ordine;
 select * from composizione;
 select * from ricerca;
 select * from stipendio;
+select * from video;
+select * from cliente_tesserato;
+select * from persona;
+SELECT nome, cognome, P.email, città from persona P where P.email = "ciao@sonodavide.com";
+
+SELECT nome, cognome, P.email, città, C.numero_tessera from persona P, cliente_tesserato C 
+	where P.email = C.email AND P.email = "ciao@sonodavide.com";		
+
+select P.nome, P.cognome, P.email, P.città from persona P, cliente_tesserato C where P.email = C.email AND C.numero_tessera = 4;
+delete from cliente_tesserato where numero_tessera = 8;
+update persona set nome = "dav" where email = "ciao@sonodavide.com" ; 
+select id_videocamera, data_inizio, timediff(data_fine, data_inizio) as durata, video_path from video where valido = true;
+
+UPDATE video SET valido = false WHERE id_videocamera = 1 AND data_inizio = "2021-06-15 8:00:00";
 
 select SUM(uscite) from saldo_giornaliero where data between "2021-5-28" and "2021-6-30";
 select * from saldo_giornaliero;

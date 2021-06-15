@@ -132,20 +132,20 @@ create table Vendita (
 
 create table Video (
      id_videocamera int not null,
-     data_inizio date not null,
-     data_fine date not null,
+     data_inizio datetime not null,
+     data_fine datetime not null,
      video_path varchar(100) not null,
-     nome varchar(50),
-     valido char default '1' not null,
+     valido boolean default true not null,
      constraint IDVideo primary key (id_videocamera, data_inizio));
 
 
 -- Constraints Section
 -- ___________________ 
-
 alter table Cliente_Tesserato add constraint FKcliente_mail_FK
      foreign key (email)
-     references Persona (email);
+     references Persona (email)
+     on update cascade
+     on delete cascade;
 
 alter table Composizione add constraint FKprodotto
      foreign key (codice_prod)

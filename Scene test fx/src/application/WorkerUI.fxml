@@ -31,7 +31,6 @@
             <Menu fx:id="clientMenu" mnemonicParsing="false" text="Clienti">
                <items>
                   <MenuItem fx:id="findCustomerMenu" mnemonicParsing="false" onAction="#handleFindCustomerMenu" text="Cerca" />
-                  <MenuItem fx:id="newCustomerMenu" mnemonicParsing="false" onAction="#handleNewCustomerMenu" text="Inizializza" />
                </items></Menu>
             <Menu mnemonicParsing="false" text="Cerca">
                <items>

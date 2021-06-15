@@ -134,7 +134,9 @@ INSERT INTO composizione(codice_prod, quantità, codice_dipendente, giorno_saldo
 						(12345, 10, 3, "2021-06-14", 1);
 
 
-
+INSERT INTO video(id_videocamera, data_inizio, data_fine, video_path) VALUES 
+	(1, "2021-06-15 8:00:00", "2021-06-15 12:00:00", "C:\\Users\\crisa\\Desktop\\Progetto\ DB\\gestionalenegozio\\Untitled.mp4"),
+	(2, "2021-06-15 8:00:00", "2021-06-15 12:00:00", "C:\\Users\\crisa\\Desktop\\Progetto\ DB\\gestionalenegozio\\Untitled2.mp4");
 
 ##### Inserire Vendita
  #///datetime

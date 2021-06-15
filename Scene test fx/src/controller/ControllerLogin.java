@@ -120,6 +120,23 @@ public class ControllerLogin {
 	Button updateWorkersInfo;
 	
 	@FXML
+	TextField customerMailTF;
+	@FXML
+	TextField customerNameTF;
+	@FXML
+	TextField customerSurnameTF;
+	@FXML
+	TextField customerCityTF;
+	@FXML
+	Button searchCustomerBtn;
+	@FXML
+	TextField searchCustomerTF;
+	@FXML
+	TextField customerCodeTF;
+	@FXML
+	CheckBox showCustomersCB;
+	
+	@FXML
 	Label lblName;
 	@FXML
 	Label lblHired;
@@ -159,6 +176,17 @@ public class ControllerLogin {
 	TextArea costDescriptionTA;
 	@FXML
 	TextField costImportTF;
+	
+	@FXML
+	Button updateVideoBtn;
+	@FXML
+	Button playVideoBtn;
+	@FXML
+	Button deleteVideoBtn;
+	@FXML
+	AnchorPane videoSidePane;
+	@FXML
+	TableView<ObservableList<String>> videoTV;
 	
 	public ControllerLogin(Connection conn, Integer id) {
 		this.conn = conn;
@@ -263,11 +291,6 @@ public class ControllerLogin {
 	}
 	
 	@FXML
-    private void handleNewCustomerMenu() {
-		application.utils.swapPane(workerPane, new ControllerLogin(conn,id), "/application/NewCustomerUI.fxml");
-	}
-	
-	@FXML
     private void handleFindCustomerMenu() {
 		application.utils.swapPane(workerPane, new ControllerFindCustomer(conn, id), "/application/FindCustomerUI.fxml");
 	}
@@ -295,6 +318,11 @@ public class ControllerLogin {
 	@FXML
 	private void handleAddCost() {
 		application.utils.swapPane(workerPane, new ControllerCosts(conn, id), "/application/ResponsableCostsUI.fxml");
+	}
+	
+	@FXML
+	private void handleShowVideos() {
+		application.utils.swapPane(workerPane, new ControllerVideos(conn, id), "/application/VideoUI.fxml");
 	}
 	
 	
@@ -416,4 +444,5 @@ public class ControllerLogin {
 		}
 		System.exit(0);
 	}
+	
 }

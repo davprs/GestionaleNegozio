@@ -119,7 +119,7 @@ public class ControllerCosts extends ControllerLogin{
 					row.add(rs.getObject(3).toString());
 					row.add((rs.getObject(4)).toString());
 					row.add(((Time)rs.getObject(5)).toString());
-					row.add(((Float)rs.getObject(6)).toString());
+					row.add(((BigDecimal)rs.getObject(6)).toString());
 					row.add((rs.getObject(7)).toString());
 					row.add((rs.getObject(8)).toString());
 					System.out.println((rs.getObject(7)).toString());

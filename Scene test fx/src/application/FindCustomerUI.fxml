@@ -2,6 +2,7 @@
 
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
@@ -15,10 +16,11 @@
          <children>
             <ToolBar prefHeight="0.0" prefWidth="296.0">
               <items>
-                  <TextField alignment="TOP_CENTER" prefHeight="25.0" prefWidth="172.0" />
+                  <TextField fx:id="searchCustomerTF" alignment="TOP_CENTER" prefHeight="25.0" prefWidth="172.0" />
                 <Button fx:id="searchCustomerBtn" alignment="TOP_RIGHT" mnemonicParsing="false" text="Cerca" textAlignment="CENTER" />
               </items>
             </ToolBar>
+            <CheckBox fx:id="showCustomersCB" mnemonicParsing="false" selected="true" text="Mostra SOLO Clienti" textAlignment="CENTER" />
          </children>
       </VBox>
       <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="699.0" prefWidth="946.0">
@@ -26,25 +28,27 @@
             <Pane prefHeight="162.0" prefWidth="367.0">
                <children>
                   <Label alignment="CENTER" layoutX="199.0" layoutY="14.0" text="Nome" />
-                  <TextField alignment="CENTER" layoutX="64.0" layoutY="37.0" prefHeight="25.0" prefWidth="303.0" />
+                  <TextField fx:id="customerNameTF" alignment="CENTER" layoutX="64.0" layoutY="37.0" prefHeight="25.0" prefWidth="303.0" />
                </children>
             </Pane>
             <Pane prefHeight="158.0" prefWidth="600.0">
                <children>
-                  <TextField alignment="CENTER" layoutX="64.0" layoutY="39.0" prefHeight="25.0" prefWidth="303.0" />
+                  <TextField fx:id="customerSurnameTF" alignment="CENTER" layoutX="64.0" layoutY="39.0" prefHeight="25.0" prefWidth="303.0" />
                   <Label alignment="CENTER" layoutX="190.0" layoutY="7.0" text="Cognome" />
                </children>
             </Pane>
             <Pane prefHeight="159.0" prefWidth="600.0">
                <children>
                   <Label alignment="CENTER" layoutX="201.0" layoutY="7.0" text="email" />
-                  <TextField alignment="CENTER" layoutX="64.0" layoutY="39.0" prefHeight="25.0" prefWidth="303.0" />
+                  <TextField fx:id="customerMailTF" alignment="CENTER" layoutX="64.0" layoutY="39.0" prefHeight="25.0" prefWidth="303.0" />
                </children>
             </Pane>
             <Pane prefHeight="200.0" prefWidth="600.0">
                <children>
                   <Label alignment="CENTER" layoutX="171.0" layoutY="7.0" text="città di residenza" textAlignment="CENTER" />
-                  <TextField alignment="CENTER" layoutX="64.0" layoutY="39.0" prefHeight="25.0" prefWidth="303.0" />
+                  <TextField fx:id="customerCityTF" alignment="CENTER" layoutX="64.0" layoutY="39.0" prefHeight="25.0" prefWidth="303.0" />
+                  <Label alignment="CENTER" layoutX="580.0" layoutY="10.0" text="Codice Cliente" textAlignment="CENTER" />
+                  <TextField fx:id="customerCodeTF" alignment="CENTER" disable="true" layoutX="473.0" layoutY="42.0" prefHeight="25.0" prefWidth="303.0" />
                </children>
             </Pane>
          </children>
