@@ -15,11 +15,16 @@
             <TableView fx:id="findSellTV" prefHeight="414.0" prefWidth="402.0" />
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="185.0" prefWidth="402.0">
                <children>
-                  <Label layoutX="38.0" text="Totale :">
+                  <Label layoutX="647.0" text="Totale :">
                      <font>
                         <Font size="22.0" />
                      </font></Label>
                   <TextField fx:id="totalFindSellTF" editable="false" layoutX="787.0" layoutY="3.0" />
+                  <Label fx:id="customerNameLbl" layoutX="46.0" layoutY="8.0" text="Label">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
         </items>

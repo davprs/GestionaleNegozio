@@ -182,12 +182,13 @@ public class ControllerDoSell extends ControllerLogin{
 		} else {
 			textSell.setText("");
 		}
+		System.out.println(code + "x" + qty);
 		
 		Pair productInfo = checkProduct(code, qty);
 		
 		if(productInfo != null) {
 			LinkedList<String> inner = new LinkedList<String>();
-			inner.addAll(Arrays.asList(productInfo.getKey().toString(), code, qty, ((Double)(Double.parseDouble(qty) * Double.parseDouble((String) productInfo.getValue()))).toString()));
+			inner.addAll(Arrays.asList(productInfo.getKey().toString(), code, qty, ((Double)Double.parseDouble((String) productInfo.getValue())).toString()));
 			
 			productsInSell.add( inner);	
 			updateOnScreenList();
@@ -277,6 +278,7 @@ public class ControllerDoSell extends ControllerLogin{
 		Double total = 0.0;
 		for(ObservableList<String> row : data) {
 			total += Double.parseDouble(row.get(3)) * Double.parseDouble(row.get(2));
+			total = BigDecimal.valueOf(total).setScale(1, BigDecimal.ROUND_UP).doubleValue();
 		}
 		totalDoSellTF.setText(Double.toString(total));
 		
@@ -327,13 +329,14 @@ public class ControllerDoSell extends ControllerLogin{
 				
 				String piece = "INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità) VALUES ";
 				lastId.next();
+				String n_scontrino = lastId.getString(1);
 				if(res != 0) {
 					int i = 0;
 					for (LinkedList<String> prod : productsInSell) {
 						if(i != 0) {
 							piece += ",";
 						}
-						piece += "(" + lastId.getString(1)+ ", " + prod.get(1) + ", " + prod.get(2) + ")";
+						piece += "(" + n_scontrino+ ", " + prod.get(1) + ", " + prod.get(2) + ")";
 						i++;
 					}
 				
@@ -352,7 +355,10 @@ public class ControllerDoSell extends ControllerLogin{
 					
 					System.out.println(update);
 					stmt.executeUpdate(update);
-					application.utils.showPopupPane("Vendita effettuata con successo!");
+					application.utils.showPopupPane("Vendita effettuata con successo!\n\nCODICE SCONTRINO : " + n_scontrino);
+					productsInSell.removeAll(productsInSell);
+					updateOnScreenList();
+					textSell.setText("");
 				}
 				
 			} catch (Exception e) {

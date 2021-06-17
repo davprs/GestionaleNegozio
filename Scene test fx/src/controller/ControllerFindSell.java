@@ -33,6 +33,7 @@ public class ControllerFindSell extends ControllerLogin{
 
 	public void initialize() {
 		totalFindSellTF.setOpacity(200);
+		customerNameLbl.setVisible(false);
 		
         String[] keys =
         {
@@ -134,9 +135,15 @@ public class ControllerFindSell extends ControllerLogin{
 		
 		if(stmt != null) {
 			try {
-				String query = "SELECT PV.codice_prod, P.nome_prodotto, P.prezzo_vendita as prezzo, PV.quantità "
-						+ "FROM prodotto_in_vendita PV, vendita V, prodotto P "
-						+ "WHERE PV.codice_scontrino = V.codice_scontrino AND PV.codice_prod = P.codice_prod AND V.codice_scontrino =" + sellCode + ";";
+				String query = "(SELECT PV.codice_prod, P.nome_prodotto, P.prezzo_vendita as prezzo, PV.quantità, V.numero_cliente_tesserato, J.nome, J.cognome "
+						+ "			FROM prodotto_in_vendita PV, vendita V, prodotto P, ( "
+						+ "				select nome, cognome from persona P , cliente_tesserato CT, vendita V "
+						+ "					WHERE P.email = CT.email AND CT.numero_tessera = V.numero_cliente_tesserato AND V.codice_scontrino = " + sellCode + ") as J "
+						+ "				WHERE PV.codice_scontrino = V.codice_scontrino AND PV.codice_prod = P.codice_prod AND V.codice_scontrino = " + sellCode + ")"
+						+ "		UNION "
+						+ "			(SELECT PV.codice_prod, P.nome_prodotto, P.prezzo_vendita as prezzo, PV.quantità, null, null, null "
+						+ "				FROM prodotto_in_vendita PV, vendita V, prodotto P "
+						+ "				WHERE PV.codice_scontrino = V.codice_scontrino AND PV.codice_prod = P.codice_prod AND V.codice_scontrino = " + sellCode + ") LIMIT 1;";
 				System.out.println(query);
 				ResultSet rs = stmt.executeQuery(query);
 				
@@ -145,7 +152,7 @@ public class ControllerFindSell extends ControllerLogin{
 				
 				findSellTV.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 				int numCol =rs.getMetaData().getColumnCount(); 
-				for ( int i = 1 ; i <= numCol; i++ ) 
+				for ( int i = 1 ; i <= numCol-3; i++ ) 
 				{
 					System.out.println(rs.getMetaData().getColumnName(i));
 					final int j = i -1;                
@@ -158,7 +165,7 @@ public class ControllerFindSell extends ControllerLogin{
 					findSellTV.getColumns().add(col); 						
 				}
 				
-				
+				 customerNameLbl.setVisible(false);
 				while ( rs.next() ) { 
 					
 					ObservableList<String> row = FXCollections.observableArrayList();
@@ -166,6 +173,11 @@ public class ControllerFindSell extends ControllerLogin{
 					row.add((String)rs.getObject(2));
 					row.add(((BigDecimal)rs.getObject(3)).toString());
 					row.add(((Integer)rs.getObject(4)).toString());
+					if(rs.getObject(5) != null) {
+						System.out.println();
+						customerNameLbl.setText("Cliente : " + ((Integer)rs.getObject(5)).toString() + ", " + rs.getString(6) + " " + rs.getString(7));
+						customerNameLbl.setVisible(true);
+					}
 
 					
 					System.out.println("AAAAAAAAAAAAAAAAAAAAAAA" + row);
@@ -190,8 +202,10 @@ public class ControllerFindSell extends ControllerLogin{
 		Double total = 0.0;
 		for(ObservableList<String> row : data) {
 			total += Double.parseDouble(row.get(2)) * Double.parseDouble(row.get(3));
+			total = BigDecimal.valueOf(total).setScale(1, BigDecimal.ROUND_UP).doubleValue();
 		}
 		totalFindSellTF.setText(Double.toString(total));
+		
 		
 		
 		

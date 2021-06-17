@@ -24,39 +24,47 @@
       <AnchorPane prefHeight="200.0" prefWidth="200.0">
          <children>
             <ListView fx:id="workersNamesLV" layoutX="88.0" layoutY="32.0" prefHeight="275.0" prefWidth="200.0" />
-            <Button fx:id="sub20btn" layoutX="76.0" layoutY="500.0" mnemonicParsing="false" text="-" />
-            <Button fx:id="add20btn" layoutX="274.0" layoutY="500.0" mnemonicParsing="false" text="+" />
-            <TextField fx:id="salaryTF" alignment="CENTER" layoutX="112.0" layoutY="500.0" />
-            <Button layoutX="159.0" layoutY="640.0" mnemonicParsing="false" onAction="#payWorker" text="Effettua" />
-            <Label layoutX="72.0" layoutY="349.0" text="Dipendente :" />
-            <Label fx:id="lblName" layoutX="201.0" layoutY="349.0" text="Label" />
-            <Label fx:id="lblHStd" layoutX="201.0" layoutY="397.0" text="Label" />
-            <Label layoutX="72.0" layoutY="422.0" text="Ore effettive :" />
-            <Label layoutX="72.0" layoutY="397.0" text="Ore contratto :" />
-            <Label layoutX="72.0" layoutY="445.0" text="Stipendio base :" />
-            <Label fx:id="lblHEff" layoutX="201.0" layoutY="422.0" text="Label" />
-            <Label fx:id="lblSalBase" layoutX="201.0" layoutY="445.0" text="Label" />
-            <Label layoutX="72.0" layoutY="372.0" text="Assunto da :" />
-            <Label fx:id="lblHired" layoutX="201.0" layoutY="372.0" text="Label" />
-            <Label layoutX="73.0" layoutY="465.0" text="E' un responsabile :" />
-            <Label fx:id="lblIsRes" layoutX="201.0" layoutY="465.0" text="Label" />
+            <Button fx:id="sub20btn" layoutX="76.0" layoutY="540.0" mnemonicParsing="false" text="-" />
+            <Button fx:id="add20btn" layoutX="274.0" layoutY="540.0" mnemonicParsing="false" text="+" />
+            <TextField fx:id="salaryTF" alignment="CENTER" layoutX="112.0" layoutY="540.0" />
+            <Button layoutX="246.0" layoutY="640.0" mnemonicParsing="false" onAction="#payWorker" text="Effettua" />
+            <Label layoutX="72.0" layoutY="325.0" text="Dipendente :" />
+            <Label fx:id="lblName" layoutX="219.0" layoutY="325.0" text="Label" />
+            <Label fx:id="lblHStd" layoutX="219.0" layoutY="373.0" text="Label" />
+            <Label layoutX="72.0" layoutY="398.0" text="Ore effettive :" />
+            <Label layoutX="72.0" layoutY="373.0" text="Ore contratto :" />
+            <Label layoutX="72.0" layoutY="421.0" text="Stipendio base :" />
+            <Label fx:id="lblHEff" layoutX="219.0" layoutY="398.0" text="Label" />
+            <Label fx:id="lblSalBase" layoutX="219.0" layoutY="421.0" text="Label" />
+            <Label layoutX="72.0" layoutY="348.0" text="Assunto da :" />
+            <Label fx:id="lblHired" layoutX="219.0" layoutY="348.0" text="Label" />
+            <Label layoutX="73.0" layoutY="441.0" text="E' un responsabile :" />
+            <Label fx:id="lblIsRes" layoutX="219.0" layoutY="441.0" text="Label" />
+            <Label layoutX="73.0" layoutY="463.0" text="Data ultimo stipendio :" />
+            <Label fx:id="lblLastSalary" layoutX="219.0" layoutY="463.0" text="Label" />
+            <Label layoutX="73.0" layoutY="485.0" text="Importo ultimo stipendio :" />
+            <Label fx:id="lblLastSalaryImp" layoutX="219.0" layoutY="485.0" text="Label" />
+            <Button layoutX="65.0" layoutY="640.0" mnemonicParsing="false" onAction="#showWorkers" text="Aggiorna" />
          </children>
       </AnchorPane>
       <AnchorPane prefHeight="200.0" prefWidth="200.0">
          <children>
-            <TableView layoutX="173.0" layoutY="14.0" prefHeight="275.0" prefWidth="323.0" />
+            <TableView fx:id="productsBuyTV" layoutX="173.0" layoutY="14.0" prefHeight="275.0" prefWidth="323.0" />
             <TableView fx:id="cartTV" layoutX="15.0" layoutY="356.0" prefHeight="254.0" prefWidth="482.0" />
-            <Button layoutX="431.0" layoutY="316.0" mnemonicParsing="false" text="+" />
-            <Button layoutX="326.0" layoutY="316.0" mnemonicParsing="false" text="-" />
-            <Label layoutX="268.0" layoutY="320.0" text="Quantità" />
-            <Label layoutX="28.0" layoutY="320.0" text="Prodotto :" />
-            <Label fx:id="productNameLbl" layoutX="109.0" layoutY="320.0" text="Label" />
+            <Button fx:id="qtyPlusBtn" layoutX="296.0" layoutY="325.0" mnemonicParsing="false" onAction="#qtyPlus" text="+" />
+            <Button fx:id="qtyMinBtn" layoutX="191.0" layoutY="325.0" mnemonicParsing="false" onAction="#qtyMin" text="-" />
+            <Label layoutX="231.0" layoutY="296.0" text="Quantità" />
+            <Label layoutX="15.0" layoutY="296.0" text="Prodotto :" />
+            <Label fx:id="productNameLbl" layoutX="14.0" layoutY="320.0" text="Label" />
             <Label layoutX="15.0" layoutY="635.0" text="Totale :" />
-            <Label layoutX="82.0" layoutY="635.0" text="Label" />
-            <Button layoutX="421.0" layoutY="640.0" mnemonicParsing="false" text="Acquista" />
+            <Label fx:id="cartTotalLbl" layoutX="82.0" layoutY="635.0" text="Label" />
+            <Button layoutX="421.0" layoutY="640.0" mnemonicParsing="false" onAction="#buyProducts" text="Acquista" />
             <ListView fx:id="supplierLV" layoutX="15.0" layoutY="17.0" prefHeight="275.0" prefWidth="149.0" />
-            <Button layoutX="328.0" layoutY="640.0" mnemonicParsing="false" text="Annulla" />
-            <TextField fx:id="qtyTF" alignment="CENTER" layoutX="356.0" layoutY="316.0" prefHeight="25.0" prefWidth="65.0" />
+            <Button layoutX="328.0" layoutY="640.0" mnemonicParsing="false" onAction="#clearCart" text="Annulla" />
+            <TextField fx:id="qtyTF" alignment="CENTER" editable="false" layoutX="221.0" layoutY="325.0" prefHeight="25.0" prefWidth="65.0" />
+            <Button layoutX="376.0" layoutY="316.0" mnemonicParsing="false" onAction="#addToCart" text="Aggiungi al carrello" />
+            <Button fx:id="qtyMin10Btn" layoutX="157.0" layoutY="325.0" mnemonicParsing="false" onAction="#qtyMin10" text="-10" />
+            <Button fx:id="qtyPlus10Btn" layoutX="321.0" layoutY="325.0" mnemonicParsing="false" onAction="#qtyPlus10" text="+10" />
          </children></AnchorPane>
    </items>
 </SplitPane>

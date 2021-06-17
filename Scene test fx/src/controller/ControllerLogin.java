@@ -19,8 +19,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -41,6 +43,7 @@ public class ControllerLogin {
 	
 	Connection conn;
 	Integer id;
+	final java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 	
 	@FXML
 	TextField txtWorkerID;
@@ -103,6 +106,8 @@ public class ControllerLogin {
 	Button updateBalanceBtn;
 	@FXML
 	Button updateTurnsBtn;
+	@FXML
+	Button cleanMonitorWorkersBtn;
 	
 	@FXML
 	TextField nameWorkerMonitor;
@@ -113,7 +118,11 @@ public class ControllerLogin {
 	@FXML
 	TextField baseWorkTimeWork;
 	@FXML
-	TextField hiringDateWorkersMonitor;
+	DatePicker hiringDateWorkersMonitor;
+	@FXML
+	PasswordField psswMonitorPF;
+	@FXML
+	Label workerCodeLbl;
 	@FXML
 	TextField emailWorkersMonitor;
 	@FXML
@@ -155,6 +164,10 @@ public class ControllerLogin {
 	@FXML
 	Label lblIsRes;
 	@FXML
+	Label lblLastSalary;
+	@FXML
+	Label lblLastSalaryImp;
+	@FXML
 	ListView workersNamesLV;
 	@FXML
 	Button sub20btn;
@@ -163,9 +176,9 @@ public class ControllerLogin {
 	@FXML
 	TextField salaryTF;
 	@FXML
-	ListView<ObservableList<String>> supplierLV;
+	ListView<String> supplierLV;
 	@FXML
-	TableView<ObservableList<String>> productsTV;
+	TableView<String> productsTV;
 	@FXML
 	Label productNameLbl;
 	@FXML
@@ -182,6 +195,8 @@ public class ControllerLogin {
 	TextArea costDescriptionTA;
 	@FXML
 	TextField costImportTF;
+	@FXML
+	TableView<ObservableList<String>> productsBuyTV;
 	
 	@FXML
 	Button updateVideoBtn;
@@ -193,6 +208,36 @@ public class ControllerLogin {
 	AnchorPane videoSidePane;
 	@FXML
 	TableView<ObservableList<String>> videoTV;
+	
+	
+	@FXML
+	ListView<String> supplierProdLV;
+	@FXML
+	ListView<String> categoriesProdLV;
+	@FXML
+	TextField prodSupplierTF;
+	@FXML
+	TextField prodNameTF;
+	@FXML
+	TextField prodBuyTF;
+	@FXML
+	TextField prodSellTF;
+	@FXML
+	TextField prodCatTF;
+	@FXML
+	TextField prodCodeTF;
+	@FXML
+	Button prodCleanBtn;
+	@FXML
+	Button prodAddBtn;
+	
+	@FXML
+	Button qtyPlus10Btn, qtyPlusBtn, qtyMinBtn, qtyMin10Btn;
+	@FXML
+	Label cartTotalLbl;
+	@FXML
+	Label customerNameLbl;
+	
 	
 	public ControllerLogin(Connection conn, Integer id) {
 		this.conn = conn;
@@ -245,7 +290,8 @@ public class ControllerLogin {
 		
 		if(stmt != null) {
 			try {
-				String query = "SELECT è_responsabile FROM dipendente WHERE codice_dipendente = " + txtWorkerID.getText() + ";";
+				String query = "SELECT è_responsabile FROM dipendente "
+						+ "WHERE codice_dipendente = " + txtWorkerID.getText() + " AND licenziato = false;";
 				System.out.println(query);
 				ResultSet rs = stmt.executeQuery(query);
 				
@@ -331,6 +377,11 @@ public class ControllerLogin {
 		application.utils.swapPane(workerPane, new ControllerVideos(conn, id), "/application/VideoUI.fxml");
 	}
 	
+	@FXML
+	private void handleAddProduct() {
+		application.utils.swapPane(workerPane, new ControllerAddProduct(conn, id), "/application/ProductRegistrationUI.fxml");
+
+	}
 	
 	@FXML
     private void turnStart() {

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 
 import com.mysql.cj.result.Row;
@@ -16,6 +17,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -37,7 +40,6 @@ public class ControllerManageWorkers extends ControllerLogin{
 	final private static String MONTH = "Mese";
 	final private static String YEAR = "Anno";
 
-	final private java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
 	final ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 	final ObservableList<ObservableList<String>> dataBal = FXCollections.observableArrayList();
 
@@ -56,6 +58,31 @@ public class ControllerManageWorkers extends ControllerLogin{
 
 	@SuppressWarnings("unchecked")
 	public void initialize() {
+		
+		cleanMonitorWorkersBtn.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+		    	emailWorkersMonitor.setDisable(false);
+		    	emailWorkersMonitor.setEditable(true);;
+		    	nameWorkerMonitor.setText("");
+		    	surnameWorkerMonitor.setText("");
+		    	baseSalaryWorkerMonitor.setText("");
+		    	baseWorkTimeWork.setText("");
+		    	hiringDateWorkersMonitor.setValue(null);
+		    	cityWorkersMonitor.setText("");
+		    	isResponsableWorkersMonitor.setSelected(false);
+		    	emailWorkersMonitor.setText("");
+		    	psswMonitorPF.setText("");
+		    	workerCodeLbl.setText("");
+		    	
+		    	hiringDateWorkersMonitor.setDisable(false);
+		    	hiringDateWorkersMonitor.setEditable(true);
+		    	hiringDateWorkersMonitor.setOpacity(100);
+
+			}
+		});
 		java.util.Date dtN = new java.util.Date();
 		java.util.Date dtP = new java.util.Date();
 		dtN.setDate((dtN.getDate() + 1) % 32);
@@ -85,7 +112,7 @@ public class ControllerManageWorkers extends ControllerLogin{
 		
 		if(stmt != null) {
 			try {
-				String query = "select nome, cognome, ore_lavoro_mensili, T.tot_ore_mensili, Lavoro.sta_lavorando, D.email, D.stipendio_base, D.data_assunzione, D.è_responsabile, P.città"
+				String query = "select nome, cognome, ore_lavoro_mensili, T.tot_ore_mensili, Lavoro.sta_lavorando, D.email, D.stipendio_base, D.data_assunzione, D.è_responsabile, P.città, D.codice_dipendente"
 						+ "		from Persona P, dipendente D , ("
 						+ "			select codice_dipendente, SEC_TO_TIME(SUM(TIME_TO_SEC(durata))) as tot_ore_mensili "
 						+ "            from turno "
@@ -104,7 +131,7 @@ public class ControllerManageWorkers extends ControllerLogin{
 				
 				workersTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 				int numCol =rs.getMetaData().getColumnCount(); 
-				for ( int i = 1 ; i <= numCol - 5 ; i++ ) 
+				for ( int i = 1 ; i <= numCol - 6 ; i++ ) 
 				{
 					System.out.println(rs.getMetaData().getColumnName(i));
 					final int j = i -1;                
@@ -125,13 +152,15 @@ public class ControllerManageWorkers extends ControllerLogin{
 					row.add((String)rs.getObject(2));
 					row.add(((Object)rs.getObject(3)).toString());
 					row.add(((Time)rs.getObject(4)).toString());
-					row.add(((Integer)rs.getObject(5)).toString());
+					row.add(((Integer)rs.getObject(5)).equals(1) ? "Sì" : "No");
 					
 					row.add(rs.getObject(6).toString());
 					row.add(((BigDecimal)rs.getObject(7)).toString());
 					row.add(((Date)rs.getObject(8)).toString());
 					row.add(rs.getObject(9).toString());
 					row.add(rs.getObject(10).toString());
+					row.add(rs.getObject(11).toString());
+
 
 					
 					System.out.println("AAAAAAAAAAAAAAAAAAAAAAA" + row);
@@ -291,30 +320,188 @@ public class ControllerManageWorkers extends ControllerLogin{
     
     @FXML
     private void handleUpdateWorkersInfo() {
+    	String name, surname, base_salary, montly_hours, hiring_date, city, is_responsable, email, optString;
+    	name = nameWorkerMonitor.getText();
+    	surname = surnameWorkerMonitor.getText();
+    	base_salary = baseSalaryWorkerMonitor.getText();
+    	montly_hours = baseWorkTimeWork.getText();
+    	hiring_date = sdf.format(Date.valueOf(hiringDateWorkersMonitor.getValue()));
+    	city = cityWorkersMonitor.getText();
+    	is_responsable = (isResponsableWorkersMonitor.isSelected()? "1": "0");
+    	email = emailWorkersMonitor.getText();
     	
+    	optString = "";
+    	
+    	if(name.isBlank() || surname.isBlank() || base_salary.isBlank() || montly_hours.isBlank()  || hiring_date.isBlank()  || city.isBlank()) {
+    		return;
+    	}
+    	
+    	Statement stmt = null;
+		try {
+			stmt  = conn.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			application.utils.showPopupPane(e.toString());
+		}
+		
+		if(stmt != null) {
+			try {
+				String query = null;
+				
+				if(emailWorkersMonitor.isDisabled()) {
+				
+					query = "UPDATE persona SET "
+							+ "nome = \"" + name + "\", "
+							+ "cognome = \"" + surname + "\", "
+							+ "città = \"" + city + "\" "
+							+ "WHERE email = \"" + email + "\";";
+					System.out.println(query);
+					int rs = stmt.executeUpdate(query);
+					
+					
+					query = "UPDATE dipendente SET "
+							+ "data_assunzione = \"" + hiring_date + "\", "
+							+ "stipendio_base = " + base_salary + ", "
+							+ "ore_lavoro_mensili = " + montly_hours + ", "
+							+ "è_responsabile = \"" + is_responsable + "\", "
+							+ "password = \"" + psswMonitorPF.getText() + "\" "
+							+ "WHERE email = \"" + email + "\";";
+					System.out.println(query);
+					rs = stmt.executeUpdate(query);
+					
+					stmt.close();
+				} else {
+					query = "SELECT codice_dipendente FROM dipendente "
+							+ "WHERE email = \"" + email + "\";";
+					System.out.println(query);
+					ResultSet rs = stmt.executeQuery(query);
+					if(rs.next()) {
+						query = "UPDATE dipendente SET licenziato = false "
+								+ "WHERE email = \"" + email + "\";";
+						System.out.println(query);
+						int res = stmt.executeUpdate(query);
+						
+						query = "UPDATE persona SET "
+								+ "nome = \"" + name + "\", "
+								+ "cognome = \"" + surname + "\", "
+								+ "città = \"" + city + "\" "
+								+ "WHERE email = \"" + email + "\";";
+						System.out.println(query);
+						res = stmt.executeUpdate(query);
+						
+						
+						query = "UPDATE dipendente SET "
+								+ "data_assunzione = \"" + hiring_date + "\", "
+								+ "stipendio_base = " + base_salary + ", "
+								+ "ore_lavoro_mensili = " + montly_hours + ", "
+								+ "è_responsabile = \"" + is_responsable + "\" "
+								+ "WHERE email = \"" + email + "\";";
+						System.out.println(query);
+						res = stmt.executeUpdate(query);
+						
+						stmt.close();
+						
+					} else {
+						query = "INSERT INTO persona(nome, cognome, email, città) VALUES ("
+								+ "\"" + name + "\", "
+								+ "\"" + surname + "\", "
+								+ "\"" + email + "\", "
+								+ "\"" + city + "\");";
+						System.out.println(query);
+						int res = stmt.executeUpdate(query);
+						
+						
+						query = "INSERT INTO dipendente(data_assunzione, stipendio_base, ore_lavoro_mensili, codice_dipendente, email, è_responsabile, password) VALUES ("
+								+ "\"" + hiring_date + "\", "
+								+ "" + base_salary + ", "
+								+ "" + montly_hours + ", "
+								+ "NULL, "
+								+ "\"" + email + "\", "
+								+ "\"" + is_responsable + "\", "
+								+ "\"" + psswMonitorPF.getText() + "\");";
+						System.out.println(query);
+						res = stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+						ResultSet lastId = stmt.getGeneratedKeys();
+						lastId.next();
+						String newWorkerCode = lastId.getObject(1).toString();
+						workerCodeLbl.setText(newWorkerCode);
+						optString = "\nCodice nuovo dipendente : " + newWorkerCode;
+						query = "INSERT INTO cliente_tesserato(data_tesseramento, numero_tessera, email) VALUES ("
+								+ "\"" + hiring_date + "\", "
+								+ "NULL, "
+								+ "\"" + email + "\");";
+						System.out.println(query);
+						res = stmt.executeUpdate(query);
+						
+						query = "INSERT INTO turno(codice_dipendente, data, durata) VALUES ("
+								+ "" + newWorkerCode + ", "
+								+ "\"" + LocalDateTime.now().toString() + "\", "
+								+ "\"" + "00:00:00" + "\");";
+						System.out.println(query);
+						res = stmt.executeUpdate(query);
+						
+					}
+					
+				}
+				
+				application.utils.showPopupPane("Dati salvati con successo!" + optString);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				application.utils.showPopupPane(e.toString());
+			}
+		}
     	
     }
     
     @FXML
     private void handleFireWorker() {
-    	
+    	String email = emailWorkersMonitor.getText();
+		if (email.isBlank() || ! email.contains("@")) {
+			return;
+		}
+		Statement stmt = null;
+		try {
+			stmt  = conn.createStatement();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			application.utils.showPopupPane(e.toString());
+		}
+		
+		if(stmt != null) {
+			try {
+				String query = "UPDATE dipendente SET licenziato = true WHERE email = \"" + email + "\";";
+				System.out.println(query);
+				int rs = stmt.executeUpdate(query);
+				
+				stmt.close();
+				application.utils.showPopupPane("Dipendente licenziato con successo! :(");
+			} catch (SQLException e) {
+				e.printStackTrace();
+				application.utils.showPopupPane(e.toString());
+			}
+		}
     }
     
     @FXML
     private void handleShowWorkersInfo() {
-    	System.out.println(workersTableView.getSelectionModel().getSelectedItem().get(5));
-    	System.out.println(workersTableView.getSelectionModel().getSelectedItem().get(6));
-    	System.out.println(workersTableView.getSelectionModel().getSelectedItem().get(7));
-
+    	emailWorkersMonitor.setDisable(true);
+    	emailWorkersMonitor.setEditable(false);
+    	
+    	hiringDateWorkersMonitor.setDisable(true);
+    	hiringDateWorkersMonitor.setEditable(false);
+    	hiringDateWorkersMonitor.setOpacity(200);
+    	
     	nameWorkerMonitor.setText(workersTableView.getSelectionModel().getSelectedItem().get(0));
     	surnameWorkerMonitor.setText(workersTableView.getSelectionModel().getSelectedItem().get(1));
     	baseSalaryWorkerMonitor.setText(workersTableView.getSelectionModel().getSelectedItem().get(6));
     	baseWorkTimeWork.setText(workersTableView.getSelectionModel().getSelectedItem().get(2));
-    	hiringDateWorkersMonitor.setText(workersTableView.getSelectionModel().getSelectedItem().get(7));
+    	hiringDateWorkersMonitor.setValue(LocalDate.parse(workersTableView.getSelectionModel().getSelectedItem().get(7)));
     	emailWorkersMonitor.setText(workersTableView.getSelectionModel().getSelectedItem().get(5));
     	cityWorkersMonitor.setText(workersTableView.getSelectionModel().getSelectedItem().get(9));
     	isResponsableWorkersMonitor.setSelected(workersTableView.getSelectionModel().getSelectedItem().get(8).equals("true"));
-    	
-    	
+    	workerCodeLbl.setText(workersTableView.getSelectionModel().getSelectedItem().get(10));
+    	psswMonitorPF.setText("");
     }
 }

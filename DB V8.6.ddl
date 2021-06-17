@@ -55,6 +55,7 @@ create table Dipendente (
      email varchar(40) not null,
      è_responsabile bool not null,
      licenziato bool not null default false,
+     password varchar(45),
      constraint IDDipendente primary key (codice_dipendente),
      constraint FKdipendente_mail_ID unique (email));
 
@@ -197,6 +198,9 @@ alter table Ordine add constraint FKriceve
 alter table Prodotto add constraint FKappartiene
      foreign key (categoria)
      references Categoria (nome);
+
+alter table prodotto add constraint is_positive
+	CHECK (quantità_disponibile >= 0);
 
 alter table prodotto_di_fornitore add constraint FKdispone
      foreign key (codice_fornitore)

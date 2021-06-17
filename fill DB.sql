@@ -92,6 +92,15 @@ BEGIN
 END$$
 DELIMITER ;
 
+DELIMITER $$
+CREATE TRIGGER ordine_update_saldo
+AFTER INSERT
+ON composizione FOR EACH ROW
+BEGIN
+	UPDATE saldo_giornaliero set uscite = uscite + ((SELECT prezzo_acquisto FROM prodotto WHERE codice_prod = new.codice_prod) * new.quantità) where saldo_giornaliero.data = new.giorno_saldo;
+END$$
+DELIMITER ;
+
 ##### Inserire Dipendenti
 
 INSERT INTO persona(nome, cognome, email, città) VALUES ("Mario", "Rossi", "mariorossi@gmail.com", "Pescara");
@@ -129,9 +138,9 @@ INSERT INTO prodotto_di_fornitore(codice_prod, codice_fornitore) VALUES
                         (84685, 2),
                         (15346, 2);
 
-INSERT INTO ordine(codice_dipendente, giorno_saldo, codice_fornitore) VALUES (3, "2021-06-14", 1);
+INSERT INTO ordine(codice_dipendente, giorno_saldo, codice_fornitore) VALUES (3, "2021-06-15", 1);
 INSERT INTO composizione(codice_prod, quantità, codice_dipendente, giorno_saldo, codice_fornitore) VALUES 
-						(12345, 10, 3, "2021-06-14", 1);
+						(12345, 20, 3, "2021-06-15", 1);
 
 
 INSERT INTO video(id_videocamera, data_inizio, data_fine, video_path) VALUES 
@@ -167,4 +176,4 @@ INSERT INTO costi_di_gestione(causale, breve_descrizione, importo, giorno_saldo,
 VALUES ("bolletta 1", "Bolletta leggera", 100, "2021-05-30", 3);
 
 INSERT INTO stipendio(codice_beneficiario, importo, giorno_saldo, codice_assegnatore)
-VALUES (1, 1200, "2021-5-10", 3);
+VALUES (1, 1300, "2021-6-11", 3);

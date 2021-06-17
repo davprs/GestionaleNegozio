@@ -141,7 +141,13 @@ public class ControllerFindCustomer extends ControllerLogin{
 					+ "VALUES (NOW(), \"" + email + "\");";
 			System.out.println(query);
 			try {
-				int rs = stmt.executeUpdate(query);
+				int rs = stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+				ResultSet lastId = stmt.getGeneratedKeys();
+				lastId.next();
+				String customerCode = lastId.getObject(1).toString();
+				customerCodeTF.setText(customerCode);
+				application.utils.showPopupPane("Dati salvati con successo!\n\nCodice nuovo cliente : " + customerCode);
+
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
