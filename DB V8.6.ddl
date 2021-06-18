@@ -59,6 +59,13 @@ create table Dipendente (
      constraint IDDipendente primary key (codice_dipendente),
      constraint FKdipendente_mail_ID unique (email));
 
+create table Fondo_Cassa (
+     numero_cassa int not null auto_increment,
+     importo DECIMAL(6,2) not null,
+     data_aggiornamento datetime not null,
+     codice_dipendente int not null,
+     constraint IDFondo_Cassa primary key (numero_cassa, data_aggiornamento));
+
 create table Fornitore (
      codice_fornitore int(10) not null auto_increment,
      nome varchar(30) not null,
@@ -95,6 +102,7 @@ create table Prodotto_in_Vendita (
      codice_prod int(10) not null,
      quantità int not null,
      codice_scontrino int not null,
+     prezzo_quando_venduto DECIMAL(6,2) not null,
      constraint IDProdotto_in_Vendita primary key (codice_prod, codice_scontrino));
 
 create table Ricerca (
@@ -167,6 +175,10 @@ alter table Costi_di_gestione add constraint FKgestione_inserisce
 alter table Dipendente add constraint FKdipendente_mail_FK
      foreign key (email)
      references Persona (email);
+
+alter table Fondo_Cassa add constraint FKinit
+     foreign key (codice_dipendente)
+     references Dipendente (codice_dipendente);
 
 alter table Ordine add constraint FKordine_compone 
      foreign key (giorno_saldo)

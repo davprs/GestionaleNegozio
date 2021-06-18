@@ -181,6 +181,8 @@ public class ControllerAddProduct extends ControllerLogin{
 
 				stmt.close();
 				
+				utils.showPopupPane("Prodotto registrato con successo!");
+				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

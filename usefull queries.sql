@@ -31,14 +31,42 @@ select * from vendita;
 select * from prodotto;
 select * from saldo_giornaliero;
 select * from prodotto_in_vendita;
+select * from fondo_cassa;
 select * from prodotto_di_fornitore;
 select * from fornitore;
 select * from ordine;
 select * from turno;
-delete from stipendio where codice_beneficiario > 3;
-delete from turno where codice_dipendente > 3;
-delete from dipendente where codice_dipendente > 3;
-delete from composizione where codice_prod = 34567;
+delete from vendita WHERE codice_scontrino > 0;
+
+select * from ricerca where data between "2021-6-17" and "2021-6-20";
+SELECT COUNT(*), categoria FROM RICERCA where nome is null AND data between "2021-6-17" and "2021-6-20" group by categoria having categoria not in ("Tutto");
+
+SELECT COUNT(*), categoria FROM ricerca WHERE nome IS NULL AND data between "2021-06-14" and "2021-06-18" GROUP BY categoria having categoria not in ("Tutto");
+
+select *  from saldo_giornaliero where data between "2021-06-12" AND "2021-06-18";
+
+SELECT qb.dy as giorno, COALESCE(entrate, 0) as entrate, COALESCE(uscite, 0) as uscite, COALESCE(sum(entrate - uscite) over (order by sg.data), 0) as bal from saldo_giornaliero sg 
+right join (
+    select gen_date as dy from 
+	(select adddate('1970-01-01',t4*10000 + t3*1000 + t2*100 + t1*10 + t0) as gen_date from
+	(select 0 t0 union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t0,
+	(select 0 t1 union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t1,
+	(select 0 t2 union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t2,
+	(select 0 t3 union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t3,
+	(select 0 t4 union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t4) as D 
+	where gen_date between '2021-06-01' and '2021-06-20'        
+    ) as qb 
+on sg.data = qb.dy 
+order by qb.dy asc;
+
+
+
+
+SELECT F.importo, F.data_aggiornamento, F.codice_dipendente, P.nome, P.cognome
+FROM fondo_cassa F, persona P, dipendente D
+WHERE F.codice_dipendente = D.codice_dipendente AND D.email = P.email AND F.numero_cassa = 3 AND F.data_aggiornamento IN (
+	SELECT max(data_aggiornamento) FROM fondo_cassa WHERE numero_cassa = 3
+    );
 
 (SELECT PV.codice_prod, P.nome_prodotto, P.prezzo_vendita as prezzo, PV.quantità, V.numero_cliente_tesserato, J.nome, J.cognome 
 	FROM prodotto_in_vendita PV, vendita V, prodotto P, (
@@ -49,6 +77,7 @@ delete from composizione where codice_prod = 34567;
     (SELECT PV.codice_prod, P.nome_prodotto, P.prezzo_vendita as prezzo, PV.quantità, null, null, null 
 	FROM prodotto_in_vendita PV, vendita V, prodotto P 
     WHERE PV.codice_scontrino = V.codice_scontrino AND PV.codice_prod = P.codice_prod AND V.codice_scontrino =1) limit 1;
+
 
 
 select nome, cognome from persona P , cliente_tesserato CT WHERE P.email = CT.email AND CT.numero_tessera = 21;

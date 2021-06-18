@@ -5,23 +5,49 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox fx:id="initMoneyVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="initMoneyVBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane prefHeight="71.0" prefWidth="600.0">
+      <Pane prefHeight="200.0" prefWidth="600.0">
          <children>
-            <Label fx:id="initializedMoneyInfo" alignment="CENTER" layoutX="6.0" layoutY="8.0" prefHeight="55.0" prefWidth="588.0" text="Label" textAlignment="CENTER" />
+            <Label layoutX="194.0" layoutY="79.0" text="Scegliere la cassa :">
+               <font>
+                  <Font size="29.0" />
+               </font>
+            </Label>
+            <TextField fx:id="deskTF" alignment="CENTER" layoutX="860.0" layoutY="86.0" prefHeight="25.0" prefWidth="57.0" />
+            <Button layoutX="937.0" layoutY="86.0" mnemonicParsing="false" onAction="#chooseDesk" text="Scegli" />
+         </children>
+      </Pane>
+      <Pane prefHeight="200.0" prefWidth="600.0">
+         <children>
+            <Label fx:id="initializedMoneyInfo" alignment="CENTER" layoutX="306.0" layoutY="8.0" prefHeight="188.0" prefWidth="588.0" textAlignment="CENTER">
+               <font>
+                  <Font size="21.0" />
+               </font></Label>
          </children>
       </Pane>
       <Pane prefHeight="133.0" prefWidth="600.0">
          <children>
-            <TextField fx:id="initMoneytext" layoutX="204.0" layoutY="62.0" prefHeight="25.0" prefWidth="191.0" />
-            <Label layoutX="169.0" layoutY="37.0" text="Inserire l'importo con cui inizilizzare il fondocassa" />
+            <TextField fx:id="initMoneyTF" layoutX="725.0" layoutY="32.0" prefHeight="25.0" prefWidth="191.0" />
+            <Label layoutX="199.0" layoutY="24.0" prefHeight="40.0" prefWidth="481.0" text="Inserire l'importo con cui inizializzare il fondocassa :">
+               <font>
+                  <Font size="20.0" />
+               </font></Label>
          </children>
       </Pane>
       <Pane prefHeight="130.0" prefWidth="600.0">
          <children>
-            <Button fx:id="initMoneyBtn" layoutX="252.0" layoutY="34.0" mnemonicParsing="false" onAction="#handleInitMoneyBtn" prefHeight="48.0" prefWidth="97.0" text="Inizializza" />
+            <Button fx:id="initMoneyBtn" layoutX="670.0" layoutY="41.0" mnemonicParsing="false" onAction="#handleInitMoneyBtn" prefHeight="48.0" prefWidth="97.0" text="Inizializza">
+               <font>
+                  <Font size="17.0" />
+               </font></Button>
+            <Button layoutX="441.0" layoutY="41.0" mnemonicParsing="false" onAction="#handleClear" prefHeight="48.0" prefWidth="97.0" text="Pulisci">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Button>
          </children>
       </Pane>
    </children>

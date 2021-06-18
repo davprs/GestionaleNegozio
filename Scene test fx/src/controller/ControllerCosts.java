@@ -487,7 +487,7 @@ public class ControllerCosts extends ControllerLogin{
 		
 		cartTotal += ((Double)(Double.parseDouble(cartRow.get(2)))) * qtyCounter;
 		
-		cartTotal = BigDecimal.valueOf(cartTotal).setScale(1, BigDecimal.ROUND_UP).doubleValue();	//utile per soldi
+		cartTotal = BigDecimal.valueOf(cartTotal).setScale(2, BigDecimal.ROUND_UP).doubleValue();	//utile per soldi
 		
 		cartTotalLbl.setText(cartTotal.toString());
 		qtyCounter = 1;

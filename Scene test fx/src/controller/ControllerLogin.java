@@ -1,5 +1,6 @@
 package controller;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -15,6 +16,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckMenuItem;
@@ -89,6 +92,8 @@ public class ControllerLogin {
 	TextField totalDoSellTF;
 	@FXML
 	VBox initMoneyVBox;
+	@FXML
+	TextField initMoneyTF;
 	@FXML
 	Label initializedMoneyInfo;
 	@FXML
@@ -237,7 +242,20 @@ public class ControllerLogin {
 	Label cartTotalLbl;
 	@FXML
 	Label customerNameLbl;
+	@FXML
+	Label sellDateLbl;
 	
+	@FXML
+	TextField deskTF;
+	
+	@FXML
+	DatePicker startStat, endStat;
+	@FXML
+	BarChart<String, Integer> statBar;
+	@FXML
+	LineChart<String, BigDecimal> statLine;
+	@FXML
+	ChoiceBox<String> statChoise;
 	
 	public ControllerLogin(Connection conn, Integer id) {
 		this.conn = conn;
@@ -381,6 +399,11 @@ public class ControllerLogin {
 	private void handleAddProduct() {
 		application.utils.swapPane(workerPane, new ControllerAddProduct(conn, id), "/application/ProductRegistrationUI.fxml");
 
+	}
+	
+	@FXML
+	private void handleShowStat() {
+		application.utils.swapPane(workerPane, new ControllerStat(conn, id), "/application/StatUI.fxml");
 	}
 	
 	@FXML

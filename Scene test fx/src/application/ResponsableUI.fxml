@@ -41,6 +41,7 @@
                   <MenuItem fx:id="manageWorkers" mnemonicParsing="false" onAction="#handleManageWorkers" text="Gestisci Personale" />
                   <MenuItem fx:id="manageWorkers1" mnemonicParsing="false" onAction="#handleAddCost" text="Aggiungi Spesa" />
                   <MenuItem fx:id="manageWorkers111" mnemonicParsing="false" onAction="#handleAddProduct" text="Aggiungi Prodotto" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleShowStat" text="Mostra Statistiche" />
                   <MenuItem fx:id="manageWorkers11" mnemonicParsing="false" onAction="#handleShowVideos" text="Video di Sicurezza" />
                </items>
             </Menu>

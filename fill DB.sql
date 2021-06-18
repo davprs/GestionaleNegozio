@@ -177,3 +177,6 @@ VALUES ("bolletta 1", "Bolletta leggera", 100, "2021-05-30", 3);
 
 INSERT INTO stipendio(codice_beneficiario, importo, giorno_saldo, codice_assegnatore)
 VALUES (1, 1300, "2021-6-11", 3);
+
+INSERT INTO fondo_cassa (numero_cassa, importo, data_aggiornamento, codice_dipendente) 
+	VALUES(3, 210, NOW(), 2);

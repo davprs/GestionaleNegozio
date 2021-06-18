@@ -278,7 +278,7 @@ public class ControllerDoSell extends ControllerLogin{
 		Double total = 0.0;
 		for(ObservableList<String> row : data) {
 			total += Double.parseDouble(row.get(3)) * Double.parseDouble(row.get(2));
-			total = BigDecimal.valueOf(total).setScale(1, BigDecimal.ROUND_UP).doubleValue();
+			total = BigDecimal.valueOf(total).setScale(2, BigDecimal.ROUND_UP).doubleValue();
 		}
 		totalDoSellTF.setText(Double.toString(total));
 		
@@ -327,7 +327,7 @@ public class ControllerDoSell extends ControllerLogin{
 				
 				stmt = conn.createStatement();
 				
-				String piece = "INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità) VALUES ";
+				String piece = "INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità, prezzo_quando_venduto) VALUES ";
 				lastId.next();
 				String n_scontrino = lastId.getString(1);
 				if(res != 0) {
@@ -336,7 +336,7 @@ public class ControllerDoSell extends ControllerLogin{
 						if(i != 0) {
 							piece += ",";
 						}
-						piece += "(" + n_scontrino+ ", " + prod.get(1) + ", " + prod.get(2) + ")";
+						piece += "(" + n_scontrino+ ", " + prod.get(1) + ", " + prod.get(2) + ", " + prod.get(3) + ")";
 						i++;
 					}
 				
