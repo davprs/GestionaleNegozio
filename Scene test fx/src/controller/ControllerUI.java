@@ -42,7 +42,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class ControllerLogin {
+public class ControllerUI {
 	
 	Connection conn;
 	Integer id;
@@ -257,7 +257,7 @@ public class ControllerLogin {
 	@FXML
 	ChoiceBox<String> statChoise;
 	
-	public ControllerLogin(Connection conn, Integer id) {
+	public ControllerUI(Connection conn, Integer id) {
 		this.conn = conn;
 		this.id = id;
 	}
@@ -309,7 +309,7 @@ public class ControllerLogin {
 		if(stmt != null) {
 			try {
 				String query = "SELECT è_responsabile FROM dipendente "
-						+ "WHERE codice_dipendente = " + txtWorkerID.getText() + " AND licenziato = false;";
+						+ "WHERE codice_dipendente = " + txtWorkerID.getText() + " AND password = \"" + txtWorkerPSSW.getText() + "\" AND licenziato = false;";
 				System.out.println(query);
 				ResultSet rs = stmt.executeQuery(query);
 				

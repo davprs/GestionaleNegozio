@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 
-import controller.ControllerLogin;
+import controller.ControllerUI;
 import controller.ControllerSearchItems;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -43,7 +43,7 @@ public class utils {
         dialog.show();
 	}
 	
-	private static void changeUI(String path, ControllerLogin controller) {
+	private static void changeUI(String path, ControllerUI controller) {
 		//FXMLLoader fxml = application.Main.getFXMLLoader();
 		
 		FXMLLoader fxml = new FXMLLoader();
@@ -77,14 +77,14 @@ public class utils {
 	}
 	
 	public static void createWorkerUI(Connection conn, Integer id) {
-		changeUI("WorkerUI.fxml", new controller.ControllerLogin(conn, id));
+		changeUI("WorkerUI.fxml", new controller.ControllerUI(conn, id));
 	}
 	
 	public static void createResponsableUI(Connection conn, Integer id) {
-		changeUI("ResponsableUI.fxml", new controller.ControllerLogin(conn, id));
+		changeUI("ResponsableUI.fxml", new controller.ControllerUI(conn, id));
 	}
 	
-	public static void swapPane(Pane innerPane, ControllerLogin controller, String UIPath) {
+	public static void swapPane(Pane innerPane, ControllerUI controller, String UIPath) {
 		Object newPane = null;
 		SplitPane newLoadedPane = null;
 		VBox newLoadedVbox = null;

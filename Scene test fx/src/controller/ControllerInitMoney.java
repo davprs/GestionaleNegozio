@@ -18,7 +18,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.util.Callback;
 
-public class ControllerInitMoney extends ControllerLogin{
+public class ControllerInitMoney extends ControllerUI{
 	
     public ControllerInitMoney(Connection conn, Integer id) {
 		super(conn, id);

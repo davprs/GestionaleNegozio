@@ -6,14 +6,13 @@ from Persona P, dipendente D , (select codice_dipendente, SEC_TO_TIME(SUM(TIME_T
             where data between "2021-04-24" and "2021-05-30" 
             group by codice_dipendente) as T
 where P.email = D.email AND T.codice_dipendente = D.codice_dipendente;
-select * from Persona P;
 select * from turno;
 
 ##### Visualizza tutti i responsabili
 #select * from Persona P, dipendente D where D.è_responsabile is true AND P.email = D.dati_personali
 
 #### Visualizza prodotti
-
+SELECT nome_prodotto AS NOME, categoria AS CATEGORIA, prezzo_vendita AS PREZZO, quantità_disponibile as QTA  FROM prodotto WHERE nome_prodotto LIKE '%La%';
 select * from fornitore;
 select * from ordine;
 
@@ -36,7 +35,7 @@ select * from prodotto_di_fornitore;
 select * from fornitore;
 select * from ordine;
 select * from turno;
-delete from vendita WHERE codice_scontrino > 0;
+delete from ordine WHERE codice_fornitore > 0;
 
 select * from ricerca where data between "2021-6-17" and "2021-6-20";
 SELECT COUNT(*), categoria FROM RICERCA where nome is null AND data between "2021-6-17" and "2021-6-20" group by categoria having categoria not in ("Tutto");

@@ -27,7 +27,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.util.Callback;
 
-public class ControllerVideos extends ControllerLogin{
+public class ControllerVideos extends ControllerUI{
 	final ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 
 	public ControllerVideos(Connection conn, Integer id) {

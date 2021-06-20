@@ -23,7 +23,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
 
-public class ControllerFindSell extends ControllerLogin{
+public class ControllerFindSell extends ControllerUI{
 	final private ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 
     public ControllerFindSell(Connection conn, Integer id) {

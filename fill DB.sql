@@ -104,26 +104,29 @@ DELIMITER ;
 ##### Inserire Dipendenti
 
 INSERT INTO persona(nome, cognome, email, città) VALUES ("Mario", "Rossi", "mariorossi@gmail.com", "Pescara");
-INSERT INTO dipendente(data_assunzione, stipendio_base, ore_lavoro_mensili, codice_dipendente, email, è_responsabile) VALUES ("2020-10-1", 1200, 80, NULL, "mariorossi@gmail.com", false);
+INSERT INTO dipendente(data_assunzione, stipendio_base, ore_lavoro_mensili, codice_dipendente, email, è_responsabile, password) VALUES ("2020-10-1", 1200, 80, NULL, "mariorossi@gmail.com", true, "pass");
 INSERT INTO cliente_tesserato(data_tesseramento, numero_tessera, email) VALUES ("2020-10-1", NULL, "mariorossi@gmail.com");
+INSERT INTO turno(codice_dipendente, data, durata) VALUES (LAST_INSERT_ID(), now(), "00:00:00");
 
 INSERT INTO persona(nome, cognome, email, città) VALUES ("Gianni", "Mucci", "giannimucci@gmail.com", "Pescara");
-INSERT INTO dipendente(data_assunzione, stipendio_base, ore_lavoro_mensili, codice_dipendente, email, è_responsabile) VALUES ("2021-1-1", 1100, 90, NULL, "giannimucci@gmail.com", false);
+INSERT INTO dipendente(data_assunzione, stipendio_base, ore_lavoro_mensili, codice_dipendente, email, è_responsabile, password) VALUES ("2021-1-1", 1100, 90, NULL, "giannimucci@gmail.com", false, "pass");
 INSERT INTO cliente_tesserato(data_tesseramento, numero_tessera, email) VALUES ("2021-1-1", NULL, "giannimucci@gmail.com");
+INSERT INTO turno(codice_dipendente, data, durata) VALUES (LAST_INSERT_ID(), now(), "00:00:00");
 
 INSERT INTO persona(nome, cognome, email, città) VALUES ("Luca", "Blu", "lucablu@gmail.com", "Montesilvano");
-INSERT INTO dipendente(data_assunzione, stipendio_base, ore_lavoro_mensili, codice_dipendente, email, è_responsabile) VALUES ("2029-11-1", 1300, 70, NULL, "lucablu@gmail.com", true);
+INSERT INTO dipendente(data_assunzione, stipendio_base, ore_lavoro_mensili, codice_dipendente, email, è_responsabile, password) VALUES ("2029-11-1", 1300, 70, NULL, "lucablu@gmail.com", true, "pass");
 INSERT INTO cliente_tesserato(data_tesseramento, numero_tessera, email) VALUES ("2019-11-1", NULL, "lucablu@gmail.com");
+INSERT INTO turno(codice_dipendente, data, durata) VALUES (LAST_INSERT_ID(), now(), "00:00:00");
 
 
 ##### Inserire Prodotti
 
 INSERT INTO prodotto (codice_prod, nome_prodotto, categoria, prezzo_vendita, prezzo_acquisto, quantità_disponibile) VALUES 
-						(12345, "Lampadina Led 15W", "elettronica domestica", 8.2, 5, 20),
-                        (16452, "Samsink TV 24'' AO824TV", "elettronica domestica", 259.99, 180, 12),
-                        (25648, "TwoPlus Two", "telefonia", 499.99, 380 , 20),
-                        (84685, "Duracell Batteria 9V", "elettronica domestica", 5.99, 2.5, 30),
-                        (15346, "Bic JelPen 0.2", "cancelleria", 2.99, 1.2, 35);
+						(12345, "Lampadina Led 15W", "elettronica domestica", 8.2, 5, 50),
+                        (16452, "Samsink TV 24'' AO824TV", "elettronica domestica", 259.99, 180, 50),
+                        (25648, "TwoPlus Two", "telefonia", 499.99, 380 , 50),
+                        (84685, "Duracell Batteria 9V", "elettronica domestica", 5.99, 2.5, 50),
+                        (15346, "Bic JelPen 0.2", "cancelleria", 2.99, 1.2, 50);
 
 
 
@@ -144,22 +147,12 @@ INSERT INTO composizione(codice_prod, quantità, codice_dipendente, giorno_saldo
 
 
 INSERT INTO video(id_videocamera, data_inizio, data_fine, video_path) VALUES 
-	(1, "2021-06-15 8:00:00", "2021-06-15 12:00:00", "C:\\Users\\crisa\\Desktop\\Progetto\ DB\\gestionalenegozio\\Untitled.mp4"),
-	(2, "2021-06-15 8:00:00", "2021-06-15 12:00:00", "C:\\Users\\crisa\\Desktop\\Progetto\ DB\\gestionalenegozio\\Untitled2.mp4");
+	(1, "2021-06-16 8:00:00", "2021-06-16 12:00:00", "C:\\Users\\crisa\\Desktop\\Progetto\ DB\\gestionalenegozio\\camera1-19-06-2021.mp4"),
+	(2, "2021-06-16 8:00:00", "2021-06-16 12:00:00", "C:\\Users\\crisa\\Desktop\\Progetto\ DB\\gestionalenegozio\\camera2-19-06-2021.mp4");
 
 ##### Inserire Vendita
- #///datetime
-#INSERT INTO saldo_giornaliero(data, entrate, uscite) VALUES ("2021-1-11", 0, 0);
-INSERT INTO vendita (codice_scontrino, giorno_saldo, codice_dipendente, numero_cliente_tesserato) VALUES (NULL, "2021-5-28", 1, NULL);
-
-INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità) VALUES (LAST_INSERT_ID(), 12345, 1);
-
-
-#////////////	SENZA DATA, va tolto (forse)
-INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità) VALUES (LAST_INSERT_ID(), 12345, 2);
-INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità) VALUES (LAST_INSERT_ID(), 25648, 2);
-INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità) 
-VALUES (LAST_INSERT_ID(), 84685, 2), (LAST_INSERT_ID(), 12345, 2), (LAST_INSERT_ID(), 12345, 2);
+INSERT INTO vendita (codice_scontrino, giorno_saldo, codice_dipendente, numero_cliente_tesserato) VALUES (NULL, "2021-6-22", 1, NULL);
+INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità, prezzo_quando_venduto ) VALUES (LAST_INSERT_ID(), 12345, 1, 8.2);
 
 UPDATE saldo_giornaliero set entrate = entrate + 
 							(SELECT sum(prezzo_vendita * Q) from prodotto,
@@ -167,16 +160,31 @@ UPDATE saldo_giornaliero set entrate = entrate +
                             from prodotto_in_vendita
                             where codice_scontrino = LAST_INSERT_ID()) as proddd
                             where codice_prod = C)
-							where data = "2021-5-28";
+							where data = "2021-6-22";
+
+INSERT INTO vendita (codice_scontrino, giorno_saldo, codice_dipendente, numero_cliente_tesserato) VALUES (NULL, "2021-6-21", 2, NULL);
+INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità, prezzo_quando_venduto) VALUES (LAST_INSERT_ID(), 12345, 2, 8.2);
+INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità, prezzo_quando_venduto) VALUES (LAST_INSERT_ID(), 25648, 2, 499.99);
+INSERT INTO prodotto_in_vendita(codice_scontrino, codice_prod, quantità, prezzo_quando_venduto) VALUES (LAST_INSERT_ID(), 84685, 2, 5.99);
+
+UPDATE saldo_giornaliero set entrate = entrate + 
+							(SELECT sum(prezzo_vendita * Q) from prodotto,
+							(SELECT codice_prod C, quantità Q 
+                            from prodotto_in_vendita
+                            where codice_scontrino = LAST_INSERT_ID()) as proddd
+                            where codice_prod = C)
+							where data = "2021-6-21";
 
 
-INSERT INTO turno(codice_dipendente, data, durata) VALUES (2, "2020-02-01 13:10:02", "8:10:50"); 
+INSERT INTO turno(codice_dipendente, data, durata) VALUES (2, "2020-06-21 13:10:02", "8:10:50"); 
 
 INSERT INTO costi_di_gestione(causale, breve_descrizione, importo, giorno_saldo, codice_dipendente) 
-VALUES ("bolletta 1", "Bolletta leggera", 100, "2021-05-30", 3);
+VALUES ("bolletta Emel", "Bolletta leggera", 100, "2021-06-19", 3);
 
 INSERT INTO stipendio(codice_beneficiario, importo, giorno_saldo, codice_assegnatore)
-VALUES (1, 1300, "2021-6-11", 3);
+VALUES (2, 1300, "2021-6-01", 3);
 
-INSERT INTO fondo_cassa (numero_cassa, importo, data_aggiornamento, codice_dipendente) 
-	VALUES(3, 210, NOW(), 2);
+INSERT INTO fondo_cassa (numero_cassa, importo, data_aggiornamento, codice_dipendente) VALUES
+    (3, 210, NOW(), 2),
+    (2, 210, NOW(), 2),
+    (1, 210, NOW(), 2);

@@ -11,7 +11,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 
-public class ControllerFindCustomer extends ControllerLogin{
+public class ControllerFindCustomer extends ControllerUI{
 	
 	public ControllerFindCustomer(Connection conn, Integer id) {
 		super(conn, id);

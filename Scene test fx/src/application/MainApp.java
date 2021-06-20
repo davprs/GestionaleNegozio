@@ -1,5 +1,9 @@
 package application;
 	
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,9 +27,32 @@ public class MainApp extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
-		
+		String connectionUrl = "jdbc:mysql://";
 		try {
-			conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/db_prog2?user=root&password=password");
+			try (BufferedReader reader = new BufferedReader(new FileReader(new File("config")))) {
+
+		        String line;
+		        int c = 0;
+		        while ((line = reader.readLine()) != null) {
+		        	if(c == 0) {
+		        		connectionUrl += line + "/";		        		
+		        	} else if(c == 1) {
+		        		connectionUrl += line + "?user=";
+		        	} else if(c == 2) {
+		        		connectionUrl += line + "&password=";
+		        	} else if(c == 3) {
+		        		connectionUrl += line;
+		        	}
+		        	
+		        	c++;
+		        }
+		        
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+			//conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/db_prog2?user=root&password=password");
+			conn = DriverManager.getConnection(connectionUrl);
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,7 +64,7 @@ public class MainApp extends Application {
 		try {
 
 			fxmlloader = new FXMLLoader();
-			fxmlloader.setController(new controller.ControllerLogin(conn, -1));
+			fxmlloader.setController(new controller.ControllerUI(conn, -1));
 			fxmlloader.setLocation((URL) getClass().getResource("Sample.fxml"));
 			
 			Parent root = fxmlloader.load();

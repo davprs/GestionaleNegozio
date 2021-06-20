@@ -32,7 +32,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
 import javafx.util.Pair;
 
-public class ControllerCosts extends ControllerLogin{
+public class ControllerCosts extends ControllerUI{
 	private ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 	private ObservableList<ObservableList<String>> cart = FXCollections.observableArrayList();
 
@@ -259,7 +259,7 @@ public class ControllerCosts extends ControllerLogin{
 						+ "						            from turno "
 						+ "						            where data between \"" + dtM.toString() + "\" and \"" + dtD.toString() + "\" "
 						+ "						            group by codice_dipendente) as T "
-						+ "						where P.email = D.email AND T.codice_dipendente = D.codice_dipendente ) as R "
+						+ "						where P.email = D.email AND T.codice_dipendente = D.codice_dipendente AND D.licenziato = false) as R "
 						+ "	LEFT OUTER JOIN (select codice_beneficiario, giorno_saldo, importo "
 						+ "							from stipendio where (codice_beneficiario, giorno_saldo) in ( "
 						+ "							select codice_beneficiario, max(giorno_saldo) as giorno_saldo "
@@ -352,7 +352,7 @@ public class ControllerCosts extends ControllerLogin{
 		
 		if(stmt != null) {
 			try {
-				String query = "INSERT INTO costi_di_gestione(causale, breve_descrizione, importo, giorno_saldo, codice_dipendente) \r\n"
+				String query = "INSERT INTO costi_di_gestione(causale, breve_descrizione, importo, giorno_saldo, codice_dipendente) "
 						+ "VALUES (\"" + title + "\", \"" + description+ "\", " + amount.toString() + ", \"" + dtD.toString() + "\", " + id.toString() + ");";
 				System.out.println(query);
 				stmt.executeUpdate(query);
@@ -518,6 +518,9 @@ public class ControllerCosts extends ControllerLogin{
 		
 		if(stmt != null) {
 			try {
+				if(cart.isEmpty()) {
+					return;
+				}
 				LocalDate ld = LocalDate.now();
 				query = "INSERT INTO ordine(codice_dipendente, giorno_saldo, codice_fornitore) "
 						+ "VALUES (" + id.toString() + ", \"" + ld.toString() + "\", " + dataProd.get(0).get(3) + ");";	

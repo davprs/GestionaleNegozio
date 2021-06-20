@@ -30,7 +30,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.util.Callback;
 
-public class ControllerManageWorkers extends ControllerLogin{
+public class ControllerManageWorkers extends ControllerUI{
 	
 	final private static String BALANCE = "Bilancio";
 	final private static String INCOME = "Entrate";

@@ -34,7 +34,7 @@ import javafx.scene.layout.Region;
 import javafx.util.Callback;
 import javafx.util.Pair;
 
-public class ControllerDoSell extends ControllerLogin{
+public class ControllerDoSell extends ControllerUI{
 	
 	final private LinkedList<LinkedList<String>> productsInSell = new LinkedList<>();
 	final private ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();

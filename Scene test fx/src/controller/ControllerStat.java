@@ -28,7 +28,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.util.Callback;
 
-public class ControllerStat extends ControllerLogin{
+public class ControllerStat extends ControllerUI{
     
     public ControllerStat(Connection conn, Integer id) {
 		super(conn, id);
@@ -172,7 +172,7 @@ public class ControllerStat extends ControllerLogin{
 				exp.getNode().setStyle("-fx-stroke: #eeaaaa;");
 				bal.getNode().setStyle("-fx-stroke: #5555dd;");
 				
-				for (Data<String, BigDecimal> entry : inc.getData()) {      
+				for (Data<String, BigDecimal> entry : inc.getData()) {
 				    entry.getNode().setStyle("-fx-background-color: #aaeeaa, white;\n"
 				        + "    -fx-background-insets: 0, 2;\n"
 				        + "    -fx-background-radius: 5px;\n"

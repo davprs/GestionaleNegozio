@@ -24,7 +24,7 @@ import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
 
-public class ControllerSearchItems extends ControllerLogin{
+public class ControllerSearchItems extends ControllerUI{
 	
 	final ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 	private final static String showAllBtnTxt = "Tutto";

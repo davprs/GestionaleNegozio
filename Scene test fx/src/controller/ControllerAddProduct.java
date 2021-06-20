@@ -12,7 +12,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
-public class ControllerAddProduct extends ControllerLogin{
+public class ControllerAddProduct extends ControllerUI{
 	final ObservableList<String> dataSupp = FXCollections.observableArrayList();
 	final ObservableList<ObservableList<String>> dataCat = FXCollections.observableArrayList();
 			
@@ -134,7 +134,7 @@ public class ControllerAddProduct extends ControllerLogin{
 					int rs = stmt.executeUpdate(query);
 				} else {
 					 query = "INSERT INTO prodotto (codice_prod, nome_prodotto, categoria, prezzo_vendita, prezzo_acquisto, quantità_disponibile) VALUES "
-								+ "(" + code + ", \"" + pname + "\", \"" + cat + "\", " + bprice + ", " + sprice + ", 0 );";
+								+ "(" + code + ", \"" + pname + "\", \"" + cat + "\", " + sprice + ", " + bprice + ", 0 );";
 						System.out.println(query);
 						int rs = stmt.executeUpdate(query);
 				}
